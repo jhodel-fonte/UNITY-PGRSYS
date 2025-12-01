@@ -91,7 +91,6 @@ body {
 .register-card input:focus,
 .register-card select:focus,
 .login-card input:focus {
-  background-color: rgb(255, 255, 255);
   border-color: #2f38977f;
   box-shadow: 0 0 5px #00bfff;
   color: #000000;

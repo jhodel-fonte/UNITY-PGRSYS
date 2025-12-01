@@ -447,3 +447,8 @@
 [2025-12-01 03:58:01]["type": "INFO", "message": "No rows affected by UpdateAllProfileByPGID for userId: 250365. Data might be identical.", "file": ""]
 [2025-12-01 04:45:11]["type": "INFO", "message": "No rows affected by UpdateAllProfileByPGID for userId: 250365. Data might be identical.", "file": ""]
 [2025-12-01 05:10:12]["type": "ERROR", "message": "Database Error updating status PGID and Status!", "file": ""]
+[2025-12-01 08:13:27]["type": "ERROR", "message": "Database Error updating status PGID and Status!", "file": ""]
+[2025-12-01 08:14:13]["type": "INFO", "message": "No rows affected by UpdateAllProfileByPGID for userId: 250365. Data might be identical.", "file": ""]
+[2025-12-01 08:17:05]["type": "INFO", "message": "No rows affected by UpdateAllProfileByPGID for userId: 250365. Data might be identical.", "file": ""]
+[2025-12-01 08:20:06]["type": "Error", "message": "No Account results found for ID: Karma", "file": "C:\xampp\htdocs\UNITY-PGRSYS\app\database"]
+[2025-12-01 08:20:06]["type": "Error", "message": "No Account results found for ID: Karma", "file": "C:\xampp\htdocs\UNITY-PGRSYS\app\database"]
