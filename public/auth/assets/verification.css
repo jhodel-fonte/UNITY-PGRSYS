@@ -1,0 +1,79 @@
+/* verification */
+body {
+  background-image: url('../assets/pgsrsBG.jpg');
+}
+
+.verify-container {
+  max-width: 400px;
+  margin: 100px auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+h3 {
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+p {
+  color: #555;
+  font-size: 14px;
+}
+
+.otp-input {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+}
+
+.otp-input input {
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  font-size: 20px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  transition: all 0.2s ease-in-out;
+}
+
+.otp-input input:focus {
+  border-color: #0d6efd;
+  outline: none;
+  box-shadow: 0 0 5px rgba(13, 110, 253, 0.4);
+}
+
+button {
+  width: 100%;
+  border: none;
+  background-color: #0d6efd;
+  color: white;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background-color: #0b5ed7;
+}
+
+.resend {
+  margin-top: 15px;
+  font-size: 14px;
+  /* cursor: pointer; */
+}
+
+.resend a {
+  color: #0022ff;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.resend a:hover {
+  text-decoration: underline;
+}

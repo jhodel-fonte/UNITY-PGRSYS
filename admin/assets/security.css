@@ -1,0 +1,64 @@
+/* --- New Security Button Style --- */
+.btn-security {
+    background: #e0f2f1; /* Light teal background */
+    color: #00796b; /* Darker teal text */
+    border: 1px solid #b2dfdb;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-security:hover {
+    background: #b2dfdb; /* Darker hover background */
+    color: #004d40;
+    border-color: #004d40;
+}
+
+/* Modal header color to match the security focus */
+#securitySettingsModal .modal-header {
+    background: #004d40; /* Deep Teal */
+}
+#securitySettingsModal .modal-title {
+    color: #fff !important;
+}
+#securitySettingsModal .btn-close-white {
+    filter: invert(1); /* Makes the X white */
+}
+/* Ensure form controls look consistent in the modal */
+#securitySettingsModal .form-control:disabled {
+    background-color: #f8f9fa; /* Lighter background for disabled fields */
+    color: #6c757d;
+}
+
+/* ================
+   GENERAL PROFILE CARD CONTAINER
+   ================ */
+.card-customs {
+    position: fixed ;
+    top: 80px; 
+    left: 280px;
+    right: 20px;
+    bottom: 20px;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 18px;
+    
+    /* --- FIX START: Use Flexbox on the card container if possible --- */
+    /* NOTE: This assumes H3 and the Button are direct children of .card-customs */
+    /* If the H3 and Button are not direct children, see Option 2 below. */
+}
+
+/* --- You need a new div to wrap the H3 and the Button if they are separate. --- */
+/* Let's define the new wrapper style */
+.profile-header-row {
+    display: flex; /* Enable flexible layout */
+    justify-content: space-between; /* Push items to opposite ends */
+    align-items: center; /* Vertically center them */
+    margin-bottom: 20px; /* Add spacing below the header row */
+}
+
+/* Since H3 had a mb-3, let's reset it here if it's inside the flex container */
+.profile-header-row h3 {
+    margin-bottom: 0 !important;
+}

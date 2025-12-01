@@ -1,0 +1,20 @@
+{
+    "success": true,
+    "data": [
+        {"id": "Amanao", "name": "Amanao"},
+        {"id": "Bucal", "name": "Bucal"},
+        {"id": "Bungahan", "name": "Bungahan"},
+        {"id": "Kiblat", "name": "Kiblat"},
+        {"id": "Maugat East", "name": "Maugat East"},
+        {"id": "Maugat West", "name": "Maugat West"},
+        {"id": "Poblacion", "name": "Poblacion"},
+        {"id": "Quilo-Quilo North", "name": "Quilo-Quilo North"},
+        {"id": "Quilo-Quilo South", "name": "Quilo-Quilo South"},
+        {"id": "Salaban", "name": "Salaban"},
+        {"id": "San Felipe", "name": "San Felipe"},
+        {"id": "San Miguel", "name": "San Miguel"},
+        {"id": "Pook ni Banal", "name": "Pook ni Banal"},
+        {"id": "Puntor", "name": "Puntor"},
+        {"id": "Tulay", "name": "Tulay"}
+    ]
+}

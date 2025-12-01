@@ -1,0 +1,170 @@
+    /* 1. Page Background (Modal Backdrop) */
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-image: url(pgsrsBG.jpg);
+        background-repeat: no-repeat;
+        background-size: cover;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .overlay {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0, 0, 0, 0.5); /* Dim the background */
+        -webkit-backdrop-filter: blur(5px); /* Vendor prefix for better support */
+        backdrop-filter: blur(5px); /* Modern blur effect */
+        z-index: 1; /* Set the layer to 1 */
+    }
+
+    /* 2. The Main Card */
+    .profile-card {
+        background: #ffffff;
+        width: 100%;
+        max-width: 400px;
+        padding: 40px 30px;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        text-align: center;
+        z-index: 2; /* Lifts the card ABOVE the overlay */
+    }
+
+    /* Typography */
+    .profile-card h2 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 24px;
+    }
+    
+    .profile-card p {
+        margin: 0 0 30px 0;
+        color: #666;
+        font-size: 14px;
+    }
+
+    /* 3. The ID Preview RECTANGLE */
+    .id-preview {
+        width: 100%;
+        max-width: 300px; 
+        height: 190px;    
+        background-color: #f0f2f5;
+        border-radius: 8px; 
+        margin: 0 auto 30px auto;
+        display: flex;
+        flex-direction: column; 
+        align-items: center;
+        justify-content: center;
+        border: 2px dashed #a0a0a0; 
+        overflow: hidden;
+        position: relative;
+    }
+    
+    /* Style for the media content (image/video) inside the box */
+    .media-content {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; 
+        border-radius: 0;
+        border: none;
+        /* Ensure no lingering transform style */
+        transform: none !important;
+    }
+
+    /* Placeholder Text/Icon inside the box */
+    .id-preview-text {
+        color: #a0a0a0;
+        font-size: 14px;
+        line-height: 1.4;
+        padding: 0 10px;
+    }
+
+    /* --- Button General Styles --- */
+    .btn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.1s ease;
+        margin-bottom: 12px;
+    }
+
+    .btn:active {
+        transform: scale(0.98);
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 0; 
+    }
+    
+    .btn-primary:hover {
+        background-color: #0069d9;
+    }
+
+    /* Warning/Error State for Permission Denied */
+    .btn-warning {
+        background-color: #dc3545; /* Red warning color */
+        color: white;
+        cursor: not-allowed !important; 
+        opacity: 0.8;
+    }
+
+    .btn-warning:hover {
+        background-color: #c82333;
+    }
+
+    .btn-secondary {
+        background-color: #f8f9fa;
+        color: #333;
+        border: 1px solid #ddd;
+        width: 200px;
+        height: 40px; 
+        margin: 12px auto 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0; 
+    }
+
+    .btn-secondary:hover {
+        background-color: #e2e6ea;
+    }
+
+    .btn-confirm {
+        background-color: #28a745; 
+        color: white;
+        margin-top: 12px; 
+        margin-bottom: 0;
+        display: none; 
+    }
+
+    .divider {
+        margin: 20px 0;
+        color: #aaa;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .divider::before, .divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #eee;
+    }
+
+    #file-upload {
+        display: none;
+    }
