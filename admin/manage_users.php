@@ -8,7 +8,7 @@ require_once __DIR__ . '/../app/api/data/dataProcess.php'; // Adjusted slashes
 $adminCurrentUser = (isset($_SESSION['userLoginData']) && $_SESSION['userLoginData']['data']['role'] == 'Admin') ? $_SESSION['userLoginData']['data']['pgCode'] : null;
 //remove current signed user to the array
 
-$data_source_url = "http://localhost/UNITY-PGRSYS/app/api/data/getData.php?data=members";
+$data_source_url = "http://localhost/UNTY-PGRSYS/app/api/data/getData.php?data=members";
 $users = getDataSource($data_source_url);
 
 // Define valid statuses
