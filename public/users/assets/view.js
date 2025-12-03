@@ -100,5 +100,6 @@ document.querySelectorAll(".edit-btn").forEach((btn, index) => {
             if (innerResult.isConfirmed) {
                 Swal.fire(`Report Action: ${action} | Team ID: ${selectedTeamId}`);
             }
-        });
-});
+        })
+    });
+})

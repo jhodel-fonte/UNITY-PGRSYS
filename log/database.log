@@ -510,3 +510,4 @@
 [2025-12-02 20:08:42]["type": "ERROR", "message": "Database Error updating status PGID and otp_verified!", "file": ""]
 [2025-12-03 03:36:38]["type": "INFO", "message": "No rows affected by UpdateAllProfileByPGID for userId: 250379. Data might be identical.", "file": ""]
 [2025-12-03 03:38:18]["type": "INFO", "message": "No rows affected by UpdateAllProfileByPGID for userId: 250379. Data might be identical.", "file": ""]
+[2025-12-03 05:56:04]["type": "ERROR", "message": "Database Error updating status PGID and otp_verified!", "file": ""]
