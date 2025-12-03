@@ -4,24 +4,31 @@ require_once __DIR__ .'/../app/functions/allFunctions.php';
 require_once __DIR__ .'/../app/database/profiling.php';
 require_once __DIR__ .'/../app/database/comms.php';
 
+
+
 function redirectBasedOnRole1($role) {
-        switch ($role) {
-            case 'Admin':
-                header("Location: ../admin/dashboard.php"); // Adjusted path for login page location
-                break;
-            case 'User':
-                header("Location: ../public/users/dashboard.php"); // Adjusted path
-                break;
-            case 'ResponseTeam':
-                header("Location: ../public/response_team/index.php"); // Adjusted path
-            default:
-                header("Location: ../../error.php"); // Adjusted path
-                break;
-        }
+    if ($role == 'Admin') {
+        header("Location: ../admin/dashboard.php"); // Adjusted path for login page location
         exit;
+    }
+
+    if ($role == 'ResponseTeam') {
+       header("Location: ../public/response_team/");
+        exit;
+    }
+
+    if ($role == 'User') {
+        header("Location: ../admin/dashboard.php"); // Adjusted path for login page location
+        exit;
+    }
+    
+    header("Location: ../../error.php"); // Adjusted path
+    exit;
+
 }
 
 session_start();
+var_dump($_SESSION['userLoginData']['data']);
 
 if (isset($_SESSION['userLoginData']) ) {
   //check for updates
@@ -46,7 +53,9 @@ if ($_SESSION['userLoginData']['data']['isProfileComplete'] == false && $_SESSIO
 }
 
 if (isset($_SESSION['isOtpVerified']) && $_SESSION['isOtpVerified'] === true && isset($_SESSION['userLoginData']['data']['role'])) {
+    // var_dump($_SESSION['userLoginData']['data']['role']);
     redirectBasedOnRole1($_SESSION['userLoginData']['data']['role']);
+    exit();
 }
 
 if (isset($_SESSION['userLoginData']['data']['pgCode'])) {

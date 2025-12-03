@@ -58,9 +58,7 @@ if (isset($_SESSION['userLoginData'])  ) {
 
     <div class="container d-flex justify-content-center align-items-center min-vh-100">
 
-
-
-      <div class="login-card p-5 text-center shadow-lg">
+    <div class="login-card p-5 text-center shadow-lg">
         <a href="../../index.php" class="close-btn-fix" title="Back to Home">
               &times; 
         </a>

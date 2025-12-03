@@ -4,6 +4,11 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
+if ($_SESSION['userLoginData']['data']['role'] != 'User') {
+    header("Location: ../error.php");
+    exit;
+}
+
 $name = (isset($_SESSION['userLoginData'])) ? $_SESSION['userLoginData']['data']['firstName'] .' ' .$_SESSION['userLoginData']['data']['lastName'] : 'USER';
 $image = (isset($_SESSION['userLoginData'])) ? $_SESSION['userLoginData']['data']['profileImage'] : 'default.png';
 
