@@ -2,8 +2,6 @@
 //examples raw data
 require_once __DIR__ .'../../app/api/data/dataProcess.php';
 
-
-
 $reports = getDataSource("http://localhost/UNTY-PGRSYS/app/api/data/getData.php?data=report");
 
 $users = [

@@ -1,7 +1,7 @@
 <?php
 
 // Default message for pending verification
-$title = 'Error403';
+$title = 'Error 403';
 $message = 'Forbidden';
 
 if (isset($_GET['notVerified']) && $_GET['notVerified'] == '1') {

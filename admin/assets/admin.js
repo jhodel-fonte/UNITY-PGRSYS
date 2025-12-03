@@ -488,10 +488,11 @@ document.addEventListener("click", function (event) {
 
 // Notification Logic
 const demoNotifications = [
-    { id: 1, message: "New user registered", time: "2 min ago" },
-    { id: 2, message: "Server backup completed", time: "10 min ago" },
-    { id: 3, message: "New report submitted", time: "1 hour ago" },
-    { id: 4, message: "System maintenance scheduled", time: "3 hours ago" }
+    {message: "Error 400", time: 'Bad Request'}
+    // { id: 1, message: "New user registered", time: "2 min ago" },
+    // { id: 2, message: "Server backup completed", time: "10 min ago" },
+    // { id: 3, message: "New report submitted", time: "1 hour ago" },
+    // { id: 4, message: "System maintenance scheduled", time: "3 hours ago" }
 ];
 
 function populateNotifications() {
