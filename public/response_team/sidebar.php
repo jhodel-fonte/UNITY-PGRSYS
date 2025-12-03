@@ -38,6 +38,7 @@ $currRole = (
 
     <a href="dashboard.php" class="<?php echo ($currentPage === 'dashboard.php') ? 'active' : ''; ?>"><i class="fa-solid fa-gauge me-2"></i> Dashboard</a>
     <a href="asreports.php" class="<?php echo ($currentPage === 'asreports.php') ? 'active' : ''; ?>"><i class="fa-solid fa-file-lines me-2"></i> Assigned Reports</a>
+    <a href="reports_history.php" class="<?php echo ($currentPage === 'reports_history.php') ? 'active' : ''; ?>"><i class="fa-solid fa-history me-2"></i> Reports History</a>
     
 </div>
 

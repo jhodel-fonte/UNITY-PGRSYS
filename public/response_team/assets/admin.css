@@ -384,12 +384,17 @@ body {
 .admin-card {
     background: linear-gradient(145deg, #ffffff, #f0f0f0);
     border-radius: 20px;
-    padding: 25px;
+    padding: 40px 25px;
     text-align: center;
     position: relative;
-    box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.15);
     transition: all .25s ease;
     overflow: hidden;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Hover effect */
@@ -413,45 +418,47 @@ body {
 
 /* CARD COLORS */
 .col-md-3:nth-child(1) .admin-card {
-    background: linear-gradient(135deg, #ff9aab, #e56b80);
+    background: linear-gradient(135deg, #a44a5f, #7d3a4a);
     color: white;
 }
 .col-md-3:nth-child(1) .admin-card::before {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .col-md-3:nth-child(2) .admin-card {
-    background: linear-gradient(135deg, #ffaf6e, #ff7c36);
+    background: linear-gradient(135deg, #b8652a, #8b4f1f);
     color: white;
 }
 .col-md-3:nth-child(2) .admin-card::before {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .col-md-3:nth-child(3) .admin-card {
-    background: linear-gradient(135deg, #8b9bff, #6978ff);
+    background: linear-gradient(135deg, #3d4f7f, #2d3a5f);
     color: white;
 }
 .col-md-3:nth-child(3) .admin-card::before {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.1);
 }
 
 /* Count number */
 .admin-card h1 {
-    font-size: 45px;
+    font-size: 60px;
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     z-index: 2;
     position: relative;
+    line-height: 1;
 }
 
 /* Label */
 .admin-card p {
-    font-size: 18px;
-    font-weight: 500;
+    font-size: 20px;
+    font-weight: 600;
     margin: 0;
     z-index: 2;
     position: relative;
+    letter-spacing: 0.5px;
 }
 
 /* ============================
