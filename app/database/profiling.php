@@ -15,6 +15,7 @@ function getProfileAccountByPGID($PGiD) {
             a.mobileNum, 
             a.pgCode, 
             a.is_approved,
+            a.is_otp_verified,
             rl.name AS role, 
             st.Name AS status, 
             p.* 
@@ -111,5 +112,44 @@ function UpdateAllProfileByPGID($newDataArray) {
     }
 }
 
+function DeleteProfileData($PGID) {
+    $database = new Database();
+    $conn = $database->getConn();
 
+    if (!$conn) {
+        containlog('CRITICAL', "Database connection failed in DeleteProfileData.", null, 'database.log');
+        return false;
+    }
+
+    $sql = "DELETE FROM profile WHERE `profile`.`userId` = ? LIMIT 1";
+
+    $stmt = $conn->prepare($sql);
+
+    if ($stmt === false) {
+        $errorInfo = $conn->errorInfo();
+        containlog('ERROR', "SQL Prepare Error in DeleteProfileData: {$errorInfo[2]}", null, 'database.log');
+        return false;
+    }
+
+    try {
+        $success = $stmt->execute([$PGID]);
+
+        if ($success) {
+            if ($stmt->rowCount() > 0) {
+                return true; // Successfully deleted
+            } else {
+                containlog('INFO', "No rows deleted by DeleteProfileData for userId: {$PGID}. Profile not found.", null, 'database.log');
+                return true;
+            }
+        } else {
+            $errorInfo = $stmt->errorInfo();
+            
+            containlog('ERROR', "Database Execute Error in DeleteProfileData for userId: {$PGID}. Error: {$errorInfo[2]}", null, 'database.log');
+            return false;
+        }
+    } catch (PDOException $e) {
+        containlog('ERROR', "PDO Exception in DeleteProfileData for userId: {$PGID}. Message: {$e->getMessage()}", null, 'database.log');
+        return false;
+    }
+}
 ?>

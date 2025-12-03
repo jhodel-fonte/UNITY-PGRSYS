@@ -2,9 +2,11 @@
 session_start();
 $otpSecret = $_SESSION['secretOtp'] ."Remove This One in deployment";
 require_once __DIR__ .'../../../app/database/profiling.php';
-foreach ($_SESSION as $key => $value) {
-  echo "Key: " . htmlspecialchars($key) . ", Value: " . htmlspecialchars(print_r($value, true)) . "<br><br>";
-}
+
+
+// foreach ($_SESSION as $key => $value) {
+//   echo "Key: " . htmlspecialchars($key) . ", Value: " . htmlspecialchars(print_r($value, true)) . "<br><br>";
+// }
 
 if (isset($_SESSION['pgcode'])) {
   $_SESSION['userLoginData'] = getProfileAccountByPGID($_SESSION['pgcode']);

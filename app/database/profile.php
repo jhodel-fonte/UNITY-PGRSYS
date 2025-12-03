@@ -37,9 +37,10 @@ class profileMng {  //Profile functions for user
 
     function getAllProfileData(){
         try {
-            $query = $this->conn->prepare("SELECT profile.*, acc.mobileNum, acc.email, acc.username, st.Name as status FROM `profile` 
+            $query = $this->conn->prepare("SELECT profile.*, acc.mobileNum, acc.email, acc.username, st.Name as status, rl.name as role FROM `profile` 
                                             Left JOIN account as acc on userId = acc.pgCode
-                                            Left JOIN status as st on st.statusId = acc.statusId");
+                                            Left JOIN status as st on st.statusId = acc.statusId
+                                            LEFT JOIN roles as rl on rl.roleId = acc.roleId");
             
             if (!$query->execute()) {
                 throw new Exception("An Error Occured!");

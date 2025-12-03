@@ -18,7 +18,7 @@ function showOtpPopup(newMobile) {
         confirmButtonText: 'Verify',
         preConfirm: (otp) => {
             Swal.showLoading();
-            return fetch('../app/controllers/otp/otp.php?otp=verify', {
+            return fetch('../../app/controllers/otp/otp.php?otp=verify', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -35,12 +35,10 @@ function showOtpPopup(newMobile) {
                 return response.json();
             })
             .then(data => {
-                // Fix: Check for 'message' key instead of 'success' (based on your PHP response)
                 if (data.message === 'Success Otp Verification') {
-                    // Success: Return data to proceed
                     return data;
                 } else {
-                    // Failure: Throw error with the message from PHP
+                
                     throw new Error(data.message || 'OTP verification failed');
                 }
             })
@@ -53,6 +51,7 @@ function showOtpPopup(newMobile) {
             // OTP verified; update the mobile number field
             document.querySelector('input[name="mobileNum"]').value = newMobile;
             Swal.fire('Success!', 'Your mobile number has been updated.', 'success');
+            window.location.reload(true);
         }
     });
 }

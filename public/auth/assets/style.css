@@ -111,6 +111,33 @@ body {
   color: #000;
 }
 
+/* ------------------------------------------------------------------ */
+/* STYLES FOR THE TOP-RIGHT CLOSE BUTTON */
+/* ------------------------------------------------------------------ */
+.close-btn-fix {
+    position: absolute;
+    top: 15px; /* Spacing from the top edge of the card */
+    right: 15px; /* Spacing from the right edge of the card */
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    color: #555;
+    background: #f8f9fa; /* Light background for contrast */
+    border-radius: 50%;
+    text-decoration: none;
+    transition: background 0.3s, color 0.3s;
+    z-index: 10;
+}
+
+.close-btn-fix:hover {
+    background: #e9ecef;
+    color: #000;
+}
+/* ------------------------------------------------------------------ */
+
 /* Links */
 .link {
   color: #0022ff;

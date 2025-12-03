@@ -74,7 +74,7 @@ document.querySelectorAll(".view-btn").forEach(button => {
 });
 
 // =======================================
-// EDIT FUNCTION (Temporary Demo Logic)
+// EDIT FUNCTION (using ajax send a id, action, approve, and delete
 // =======================================
 document.querySelectorAll(".edit-btn").forEach((btn, index) => {
     btn.addEventListener("click", () => {
@@ -91,23 +91,14 @@ document.querySelectorAll(".edit-btn").forEach((btn, index) => {
         // Update row in table
         row.cells[1].innerText = newCategory;
 
-        alert("Report updated (temporary demo only). Backend developer will replace this.");
-    });
-});
-
-
-// =======================================
-// DELETE FUNCTION (Temporary Demo Logic)
-// =======================================
-document.querySelectorAll(".delete-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-        const row = btn.closest("tr");
-        const id = row.cells[0].innerText;
-
-        if (!confirm("Are you sure you want to delete report #" + id + "?")) return;
-
-        row.remove(); // Remove from table
-
-        alert("Report deleted (temporary demo only). Backend developer will replace this.");
-    });
+        Swal.fire({
+            title: messages[action] || "Edit this report?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, continue"
+        }).then(innerResult => {
+            if (innerResult.isConfirmed) {
+                Swal.fire(`Report Action: ${action} | Team ID: ${selectedTeamId}`);
+            }
+        });
 });

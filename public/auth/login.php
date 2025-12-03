@@ -15,7 +15,6 @@ var_dump($_SESSION['userLoginData']);
 $_SESSION['isOtpVerified'] = false;
 
 if (isset($_SESSION['userLoginData'])  ) {
-  //check for updates
   $_SESSION['userLoginData'] = getProfileAccountByPGID($_SESSION['userLoginData']['data']['pgCode']);
   switch ($_SESSION['userLoginData']['data']['role']) {
     case 'Admin':
@@ -59,8 +58,14 @@ if (isset($_SESSION['userLoginData'])  ) {
 
     <div class="container d-flex justify-content-center align-items-center min-vh-100">
 
+
+
       <div class="login-card p-5 text-center shadow-lg">
-        <a href="index.php"><img src="assets/img/logo.png" alt="UNITY PGSRS Logo" class="mb-2" style="width: 80px;"></a>
+        <a href="../../index.php" class="close-btn-fix" title="Back to Home">
+              &times; 
+        </a>
+
+        <a href="../../index.php"><img src="assets/img/logo.png" alt="UNITY PGSRS Logo" class="mb-2" style="width: 80px;"></a>
         <h3 class="fw-bold text">Padre Garcia Service Report System</h3>
 
         <form id="loginForm" method="POST">  <!-- action="../../app/controllers/identityVerify.php" Added id and method -->
@@ -113,10 +118,21 @@ if (isset($_SESSION['userLoginData'])  ) {
                 event.preventDefault(); // Prevent default GET submission
 
                 try {
+                    Swal.fire({
+                        title: 'Logging In...',
+                        text: 'Please wait while we verify your credentials.',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
                     const response = await fetch('../../app/controllers/identityVerify.php', {
                         method: 'POST',
                         body: new FormData(loginForm)
                     });
+
+                    Swal.close();
 
                     if (!response.ok) {
                         throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);

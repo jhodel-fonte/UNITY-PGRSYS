@@ -40,6 +40,24 @@ function changePGIDStatus($PGID, $status) {
         
 }
 
+function changeIsOTPVerifiedStatus($PGID, $status) {
+    $database = new Database();
+    $conn = $database->getConn();
+    
+    $sql = "UPDATE `account` SET `is_otp_verified` = ? WHERE `pgCode` = ?";
+    
+    $stmt = $conn->prepare($sql);
+    $success = $stmt->execute([$status, $PGID]);
+    
+    if ($success && $stmt->rowCount() > 0) {
+        return true;
+    } else {
+        containlog('ERROR', "Database Error updating status PGID and otp_verified!" , null, 'database.log');  
+        return false;
+    }
+        
+}
+
 function changePGIDRole($PGID, $roleNumber) {
     $database = new Database();
     $conn = $database->getConn();

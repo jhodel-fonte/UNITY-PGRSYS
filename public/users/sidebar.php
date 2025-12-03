@@ -4,18 +4,29 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
+$name = (isset($_SESSION['userLoginData'])) ? $_SESSION['userLoginData']['data']['firstName'] .' ' .$_SESSION['userLoginData']['data']['lastName'] : 'USER';
+$image = (isset($_SESSION['userLoginData'])) ? $_SESSION['userLoginData']['data']['profileImage'] : 'default.png';
 
 if (isset($_SESSION['userLoginData'])  ) {
     require_once __DIR__ .'../../../app/database/profiling.php';
-  //check for updates - every refresh if have a data exsists check database for changes
-  $_SESSION['userLoginData'] = getProfileAccountByPGID($_SESSION['userLoginData']['data']['pgCode']);
-  var_dump($_SESSION['userLoginData']);
+    $_SESSION['userLoginData'] = getProfileAccountByPGID($_SESSION['userLoginData']['data']['pgCode']);
+    $status = $_SESSION['userLoginData']['data']['status'];
+    $otp = $_SESSION['userLoginData']['data']['is_otp_verified'];
 
-} /* else {
+}  else {
     header('Location: ../auth/login.php');
     exit;
 }
 
+if ($status == 'NoOtpReg' && ($otp == '0' || $otp == false)){
+    header('Location: ../error.php');
+    exit;
+} else if ($status != 'Active') {
+        header('Location: ../error.php?notVerified=1');
+    exit;
+}
+
+/*
 if ($_SESSION['userLoginData']['data']['isProfileComplete'] == 0) {
     header('Location: ../auth/selfie.php');
     exit;
@@ -56,7 +67,7 @@ if ($directoryName !== $currRole) {
 
 <!-- Sidebar -->
 <div class="sidebar">
-    <h3 class="text text-center mb-4">Welcome User</h3>
+    <h3 class="text text-center mb-4">Welcome User..<br><?= htmlspecialchars($name) ?></h3>
 
     <a href="dashboard.php" class="<?php echo ($currentPage === 'dashboard.php') ? 'active' : ''; ?>"><i class="fa-solid fa-gauge me-2"></i> Dashboard</a>
     <a href="report.php" class="<?php echo ($currentPage === 'report.php') ? 'active' : ''; ?>"><i class="fa-solid fa-file-circle-plus me-2"></i> Create Report</a>
@@ -80,7 +91,7 @@ if ($directoryName !== $currRole) {
         </div>
 
         <div class="profile-menu">
-            <img src="../assets/img/funny-profile-pictures-2.jpg" class="profile-img" onclick="toggleProfileMenu()">
+            <img src="../../uploads/<?= htmlspecialchars($image) ?>" class="profile-img" onclick="toggleProfileMenu()">
             <div class="profile-dropdown" id="profileDropdown">
                 
                 <a href="myprofile.php"><i class="fa-solid fa-user me-2"></i> My Profile</a>

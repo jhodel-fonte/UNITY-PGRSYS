@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
             confirmButtonText: 'Update',
             preConfirm: (newMobile) => {
                 // Request OTP for the new mobile number
-                return fetch(`../app/controllers/otp/otp.php?otp=request&number=${encodeURIComponent(newMobile)}`, {
+                return fetch(`../../app/controllers/otp/otp.php?otp=request&number=${encodeURIComponent(newMobile)}`, {
                     method: 'GET',
                 })
                 .then(response => {

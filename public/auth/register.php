@@ -25,14 +25,14 @@ session_start();
 
     <div class="container d-flex justify-content-center align-items-start min-vh-100 py-5">
       <div class="register-card p-5 text-dark shadow-lg">
+        <a href="../../index.php" class="close-btn-fix" title="Back to Home">
+            &times; 
+        </a>
         <div class="text-center">
-    <a href="index.php">
-        <img src="assets/img/logo.png" 
-             alt="UNITY PGSRS Logo" 
-             class="mb-2" 
-             style="width: 80px;">
-    </a>
-  </div>
+          <a href="../../index.php">
+              <img src="assets/img/logo.png" alt="UNITY PGSRS Logo" class="mb-2" style="width: 80px;">
+          </a>
+        </div>
         <h2 class="text mb-4 text-center">Create Your Account</h2>
 
         <!-- Alert Messages -->
@@ -123,11 +123,6 @@ session_start();
             </div>
           </div>
 
-<!--           <div class="mb-3">
-            <label class="form-label">Government ID</label>
-            <input type="file" name="id_doc" accept="image/*,application/pdf" class="form-control form-control-lg">
-          </div> -->
-
           <div class="mb-3 form-check">
               <input type="checkbox" class="form-check-input" name="terms" id="terms" required>
               
@@ -178,10 +173,21 @@ session_start();
         submitBtn.textContent = 'Registering...';
 
         try {
+          Swal.fire({
+            title: 'Register...',
+            text: 'Please wait while we creating your account.',
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            }
+          });
+
           const response = await fetch('../../app/controllers/register.php?register=1', {
             method: 'POST',
             body: formData
           });
+
+          Swal.close();
 
           const text = await response.text();
           let data;

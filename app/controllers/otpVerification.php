@@ -53,7 +53,7 @@ try {
         containlog('Log', $msg, __DIR__, 'verifyOtp.txt');
         ob_clean();
         echo $msg;
-        changePGIDStatus($_SESSION['userLoginData']['data']['pgCode'], 1);
+        changeIsOTPVerifiedStatus($_SESSION['userLoginData']['data']['pgCode'], 1);
         exit;
     }
     ob_clean();

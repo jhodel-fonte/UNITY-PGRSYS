@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log("-----------------------------------------");
             
             
-            fetch('../app/controllers/update_password.php', {
+            fetch('../../app/controllers/update_password.php', {
                 method: 'POST',
                 body: formData
             })

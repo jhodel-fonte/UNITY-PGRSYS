@@ -4,6 +4,7 @@ session_start();
 // include_once __DIR__ .''
 
 $admin = (isset($_SESSION['userLoginData'])) ? $_SESSION['userLoginData']['data'] : null;
+$name = (isset($_SESSION['userLoginData'])) ? $_SESSION['userLoginData']['data']['firstName'] .' ' .$_SESSION['userLoginData']['data']['lastName'] : 'USER Error';
 
 if (!is_array($admin)) {
     $admin = [];
@@ -22,7 +23,7 @@ if (!empty($admin['profileImage'])) { // Assuming 'profileImage' key exists
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>My Profile | Admin</title>
+<title>My Profile | <?= htmlspecialchars($name); ?></title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -68,7 +69,7 @@ if (!empty($admin['profileImage'])) { // Assuming 'profileImage' key exists
                 
 
                 <div class="col-md-4 text-center border-end">
-                    <img src="../uploads/<?= htmlspecialchars($profileImage) ?>"
+                    <img src="../../uploads/<?= htmlspecialchars($image) ?>"
                          class="img-fluid rounded-circle mb-3"
                          style="width: 160px; height:160px; object-fit:cover;"
                          id="profileImagePreview">
