@@ -10,7 +10,7 @@ if (isset($_SESSION['pgcode'])) {
 
 }
 
-var_dump($_SESSION['userLoginData']);
+// var_dump($_SESSION['userLoginData']);
 // Redirect authenticated users
 $_SESSION['isOtpVerified'] = false;
 
@@ -49,7 +49,7 @@ if (isset($_SESSION['userLoginData'])  ) {
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="./assets/style.css">
+  <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 

@@ -123,13 +123,17 @@ session_start();
             </div>
           </div>
 
-          <div class="mb-3 form-check">
-              <input type="checkbox" class="form-check-input" name="terms" id="terms" required>
-              
-              <label class="form-check-label" for="terms">
-                   I acknowledge the above information is correct.
-              </label>
-          </div>
+            <div class="mb-3 form-check text-start">
+                <input 
+                    type="checkbox" 
+                    class="form-check-input" 
+                    id="termsCheck" 
+                    name="terms" 
+                    required>
+                <label class="form-check-label" for="termsCheck">
+                    I agree to the <a href="#" class="link text-decoration-none">terms and conditions</a>
+                </label>
+            </div>
 
           <button type="submit" class="btn w-100 py-2" id="submitBtn">Register</button>
 
