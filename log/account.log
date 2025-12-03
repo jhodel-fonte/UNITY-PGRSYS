@@ -1,6 +1,0 @@
-[2025-11-28 07:08:02] SQLSTATE[HY093]: Invalid parameter number: number of bound variables does not match number of tokens
-[2025-11-28 07:10:07] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'pgCode' cannot be null
-[2025-11-28 07:11:12] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'pgCode' cannot be null
-[2025-11-28 07:11:56] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'pgCode' cannot be null
-[2025-11-28 07:12:09] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'pgCode' cannot be null
-[2025-11-28 07:13:10] SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'pgCode' cannot be null
