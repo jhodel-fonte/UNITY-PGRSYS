@@ -14,14 +14,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Initialize the array where we'll collect the values
 $collectedValues = [];
-
-// Loop through the entire $_SESSION superglobal array
-foreach ($_SESSION as $key => $value) {
-
-    echo "Key: " . htmlspecialchars($key) . ", Value: " . htmlspecialchars(print_r($value, true)) . "<br><br>";
-}
 
 ?>
 

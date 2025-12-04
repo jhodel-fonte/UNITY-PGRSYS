@@ -18,7 +18,7 @@ function redirectBasedOnRole1($role) {
     }
 
     if ($role == 'User') {
-        header("Location: ../admin/dashboard.php"); // Adjusted path for login page location
+        header("Location: ../public/users/dashboard.php"); // Adjusted path for login page location
         exit;
     }
     

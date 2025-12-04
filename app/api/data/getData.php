@@ -7,7 +7,8 @@ header('Content-Type: application/json');
 require_once __DIR__ . '/../../database/databaseFunctions.php';
 
 require_once __DIR__ . '../../../database/reports.php';
-require_once __DIR__ .'../../../database/profile.php';
+require_once __DIR__ . '../../../database/accounting.php';
+require_once __DIR__ . '../../../database/profile.php';
 require_once __DIR__ . '../../../database/res_teams.php';
 require_once __DIR__ . '../../../utils/addAllUtil.php';
 
@@ -103,6 +104,7 @@ try {
             ];
 
         }
+        
         //get users
         if (isset($_GET['data']) && $_GET['data'] == 'members') {
             $memberClass = new profileMng();
@@ -137,7 +139,7 @@ try {
                     $userId = $member['userId'] ?? null;
                     $member['images'] = $userId && isset($imagesByUserId[$userId]) ? $imagesByUserId[$userId] : [];
                 }
-                unset($member); // Unset reference to avoid issues
+                unset($member); 
             }
 
             $response = [
@@ -145,6 +147,16 @@ try {
                 'data' => $members
             ];
 
+        }
+
+        //get response tea members
+        if (isset($_GET['data']) && $_GET['data'] == 'ResponseTeamUsers') {
+            $users = getReposnseUsers();
+            
+            $response = [
+                'success' => true,
+                'data' => $users
+            ];
         }
 
     }
@@ -158,4 +170,3 @@ try {
 
 ob_clean();
 echo json_encode($response, JSON_PRETTY_PRINT);
-

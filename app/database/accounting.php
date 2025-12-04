@@ -177,6 +177,43 @@ function updateNumberbyPGID($newNum, $PGID) {
 
 }
 
+function getReposnseUsers() {
+    $database = new Database();
+    $conn = $database->getConn();
+
+    $sql = "SELECT
+        acc.username,
+        acc.mobileNum,
+        rl.name AS role,
+        st.Name AS status,
+        acc.pgCode,
+        acc.email,
+        acc.is_approved,
+        profile.*
+    FROM 
+        `account` AS `acc`
+    LEFT JOIN 
+        roles AS rl ON rl.roleId = acc.roleId
+    LEFT JOIN 
+        status AS st ON st.statusId = acc.statusId
+    LEFT JOIN 
+        profile ON profile.userId = acc.pgCode
+    WHERE 
+        acc.roleId = 2;";
+    
+    $stmt = $conn->prepare($sql);
+    $success = $stmt->execute(); 
+    
+    if ($success) {
+        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $users;
+    } else {
+        $errorInfo = $stmt->errorInfo();
+        containlog('ERROR', "Database Error executing query in getReposnseUsers. Error: {$errorInfo[2]}", null, 'database.log'); 
+        return [];
+    }
+}
+
 
 
 

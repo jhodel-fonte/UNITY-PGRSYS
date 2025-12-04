@@ -1,9 +1,9 @@
 <?php
-if (!isset($reports) || !is_array($reports)) {
+if (!isset($teams) || !is_array($teams)) {
     return;
 }
 
-foreach ($reports as $team):
+foreach ($teams as $team):
     $teamId = htmlspecialchars($team['team_id'] ?? '');
     $teamName = htmlspecialchars($team['name'] ?? '');
     $contact = htmlspecialchars($team['contact_number'] ?? '');
@@ -16,92 +16,109 @@ foreach ($reports as $team):
 ?>
 <div class="modal fade" id="editTeamModal<?= $teamId ?>" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content bg-dark text-light">
-            <div class="modal-header border-secondary">
-                <h5 class="modal-title text-neon">Edit Response Team</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-primary">Edit Response Team: <?= $teamName ?></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <form action="" method="post" class="needs-validation" novalidate>
                     <input type="hidden" name="team_id" value="<?= $teamId ?>">
 
-                    <div class="row g-3">
+                    <h6 class="text-primary border-bottom pb-2"><i class="fas fa-edit me-2"></i>General Information</h6>
+                    <div class="row g-3 mb-4">
                         <div class="col-md-6">
-                            <label class="form-label">Team Name</label>
+                            <label class="form-label text-muted">Team Name</label>
                             <input type="text" class="form-control" name="name" value="<?= $teamName ?>" required>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Contact Number</label>
+                            <label class="form-label text-muted">Contact Number</label>
                             <input type="text" class="form-control" name="contact_number" value="<?= $contact ?>" required>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Email</label>
+                            <label class="form-label text-muted">Email</label>
                             <input type="email" class="form-control" name="email" value="<?= $email ?>">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Status</label>
+                            <label class="form-label text-muted">Status</label>
                             <select name="is_active" class="form-select">
                                 <option value="1" <?= $isActive === 1 ? 'selected' : '' ?>>Active</option>
                                 <option value="0" <?= $isActive === 0 ? 'selected' : '' ?>>Inactive</option>
                             </select>
                         </div>
                         <div class="col-md-12">
-                            <label class="form-label">Address</label>
+                            <label class="form-label text-muted">Address</label>
                             <input type="text" class="form-control" name="address" value="<?= $address ?>">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Latitude</label>
+                            <label class="form-label text-muted">Latitude</label>
                             <input type="text" class="form-control" name="latitude" value="<?= $latitude ?>">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Longitude</label>
+                            <label class="form-label text-muted">Longitude</label>
                             <input type="text" class="form-control" name="longitude" value="<?= $longitude ?>">
                         </div>
                     </div>
 
-                    <hr class="border-secondary my-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="text-neon mb-0">Team Members</h5>
-                        <button type="button" class="btn btn-sm btn-success" onclick="openAddMemberModal('<?= $teamId ?>')">
-                            <i class="fa fa-user-plus me-1"></i> Add Member
+                    <!-- Collapsible Team Members Section Header -->
+                    <div class="d-flex justify-content-between align-items-center mt-4 border-bottom pb-2">
+                        <!-- Toggle Link: Clickable H6 to collapse the members list -->
+                        <a class="text-primary text-decoration-none"
+                            data-bs-toggle="collapse"
+                            href="#membersCollapse<?= $teamId ?>"
+                            role="button"
+                            aria-expanded="true"
+                            aria-controls="membersCollapse<?= $teamId ?>">
+                            <h6 class="mb-0 fw-bold"><i class="fas fa-users me-2"></i>Team Members</h6>
+                        </a>
+                        <!-- Add Member button, kept outside the collapsible content for constant visibility -->
+                        <button type="button" class="btn btn-sm btn-success" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#addMemberModal"
+                            data-teamid="<?= $teamId ?>">
+                            <i class="fas fa-user-plus me-1"></i> Add Member
                         </button>
                     </div>
 
-                    <?php if (!empty($members)): ?>
-                        <div class="table-responsive">
-                            <table class="table table-dark table-striped align-middle">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Contact</th>
-                                        <th class="text-center">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                <?php foreach ($members as $member):
-                                    $memberId = htmlspecialchars($member['userId'] ?? '');
-                                    $memberName = htmlspecialchars(trim(($member['firstName'] ?? '') . ' ' . ($member['lastName'] ?? '')) ?: 'Unnamed Member');
-                                    $memberContact = htmlspecialchars($member['contact_number'] ?? $member['email'] ?? 'No contact info');
-                                ?>
-                                    <tr>
-                                        <td><?= $memberName ?></td>
-                                        <td><?= $memberContact ?></td>
-                                        <td class="text-center">
-                                            <button type="button" class="btn btn-sm btn-outline-warning me-2" onclick="openEditMemberModal('<?= $memberId ?>')">
-                                                <i class="fa fa-pen"></i> Edit
-                                            </button>
-                                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeMember('<?= $teamId ?>','<?= $memberId ?>')">
-                                                <i class="fa fa-user-minus"></i> Remove
-                                            </button>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    <?php else: ?>
-                        <p class="text-muted">No members assigned to this team yet.</p>
-                    <?php endif; ?>
+                    <!-- Collapsible Content (The actual member list) -->
+                    <div class="collapse show pt-3" id="membersCollapse<?= $teamId ?>">
+                        <?php if (!empty($members)): ?>
+                            <div class="table-responsive">
+                                <table class="table table-striped align-middle">
+                                    <thead>
+                                        <tr class="table-secondary">
+                                            <th>Name</th>
+                                            <th>Contact</th>
+                                            <th class="text-center">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php foreach ($members as $member):
+                                        $memberId = htmlspecialchars($member['userId'] ?? '');
+                                        $memberName = htmlspecialchars(trim(($member['firstName'] ?? '') . ' ' . ($member['lastName'] ?? '')) ?: 'Unnamed Member');
+                                        $memberContact = htmlspecialchars($member['contact_number'] ?? $member['email'] ?? 'No contact info');
+                                    ?>
+                                        <tr>
+                                            <td><?= $memberName ?></td>
+                                            <td><?= $memberContact ?></td>
+                                            <td class="text-center">
+                                                <button type="button" class="btn btn-sm btn-outline-primary me-2" onclick="openEditMemberModal('<?= $memberId ?>')">
+                                                    <i class="fas fa-pen"></i> Edit
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeMember('<?= $teamId ?>','<?= $memberId ?>')">
+                                                    <i class="fas fa-user-minus"></i> Remove
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php else: ?>
+                            <p class="text-muted">No members assigned to this team yet. Use the 'Add Member' button to assign users.</p>
+                        <?php endif; ?>
+                    </div>
+                    <!-- End Collapsible Content -->
 
                     <div class="text-end mt-4">
                         <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -112,4 +129,3 @@ foreach ($reports as $team):
     </div>
 </div>
 <?php endforeach; ?>
-

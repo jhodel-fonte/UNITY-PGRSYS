@@ -3,7 +3,7 @@
 $errorCode = $_GET['code'] ?? '404';
 $errorTitle = '';
 $errorMessage = '';
-$redirectLink = 'index.php'; 
+$redirectLink = 'app/controllers/logout.php'; 
 
 switch ($errorCode) {
     case '404':
@@ -114,7 +114,7 @@ switch ($errorCode) {
             <?= $errorMessage; ?>
         </p>
         <a href="<?= $redirectLink; ?>" class="btn btn-primary btn-home">
-            <i class="fas fa-arrow-left me-2"></i> Go to Dashboard
+            <i class="fas fa-arrow-left me-2"></i> Go to Main Page
         </a>
     </div>
 

@@ -1,7 +1,6 @@
 <?php
 $currentPage = basename($_SERVER['PHP_SELF']);
 
-
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -9,43 +8,20 @@ if (session_status() === PHP_SESSION_NONE) {
 require_once __DIR__ .'../../app/database/profiling.php';
 
 if (isset($_SESSION['userLoginData']) ) {
-  //check for updates
   $_SESSION['userLoginData'] = getProfileAccountByPGID($_SESSION['userLoginData']['data']['pgCode']);
 }
 
 $profileImage = (isset($_SESSION['userLoginData']['data']['profileImage'])) ? $_SESSION['userLoginData']['data']['profileImage'] : 'default.jpeg';
 $profileData = $_SESSION['userLoginData']['data'];
 
-/* if ($_SESSION['userLoginData']['data']['isProfileComplete'] == 0) {
-    header('Location: ../public/auth/selfie.php');
-    exit;
-}  */
-
-/* if ($_SESSION['isOtpVerified'] == false) {
-    header('Location: ../public/auth/login.php');
-    exit;
-}  */
-
-
 $currPath = str_replace('\\', '/', __DIR__);
 $directoryName = basename($currPath);
 
-// var_dump();
 $userRole = $_SESSION['userLoginData']['data']['role'];
 
-// var_dump($userRole);
-$currRole = (
-    isset($_SESSION['userLoginData']['data']['role']) && 
-    $_SESSION['userLoginData']['data']['role'] === 'Admin'
-) ? 'admin' : (
-    $_SESSION['userLoginData']['data']['role'] ?? 'default_role' // Use original role or a safe default
-);
-
-if ($directoryName !== $currRole) {
-    // redirectBasedOnRole($_SESSION['userLoginData']['data']['role']);
-    exit;
+if ($userRole != 'Admin') {
+    header("Location: ../error.php");
 }
-
 
 ?>
 
@@ -59,6 +35,7 @@ if ($directoryName !== $currRole) {
     <a href="dashboard.php" class="<?php echo ($currentPage === 'dashboard.php') ? 'active' : ''; ?>"><i class="fa-solid fa-gauge me-2"></i> Dashboard</a>
     <a href="manage_users.php" class="<?php echo ($currentPage === 'manage_users.php') ? 'active' : ''; ?>"><i class="fa-solid fa-user me-2"></i> Manage Users</a>
     <a href="manage_response_team.php" class="<?php echo ($currentPage === 'manage_response_team.php') ? 'active' : ''; ?>"><i class="fa-solid fa-users me-2"></i> Manage Response Team</a>
+    <a href="responseTeamUsers.php" class="<?php echo ($currentPage === 'responseTeamUsers.php') ? 'active' : ''; ?>"><i class="fa-solid fa-users me-2"></i> Manage Response Team Users</a>
     <a href="manage_reports.php" class="<?php echo ($currentPage === 'manage_reports.php') ? 'active' : ''; ?>"><i class="fa-solid fa-file-alt me-2"></i> Manage Reports</a>
     <a href="activity_log.php" class="<?php echo ($currentPage === 'activity_log.php') ? 'active' : ''; ?>"><i class="fa-solid fa-list-check me-2"></i> Activity Log</a>
     

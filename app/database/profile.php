@@ -179,7 +179,6 @@ class profileMng {  //Profile functions for user
 
         } catch (Exception $e) {
             throw new Exception("Failed to delete user with ID $id: " . $e->getMessage());
-            return false;
         }
     }
 
