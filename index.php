@@ -69,9 +69,9 @@ $collectedValues = [];
     </div>
 </nav>
 
-<!-- HERO SECTION -->
-<section id="home" class="hero-section">
-    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+<!-- Home SECTION -->
+<section id="home" class="home-section">
+    <div id="homeCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
 
             <div class="carousel-item active">
@@ -100,11 +100,11 @@ $collectedValues = [];
 
         </div>
 
-        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+        <button class="carousel-control-prev" type="button" data-bs-target="#homeCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon"></span>
         </button>
 
-        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+        <button class="carousel-control-next" type="button" data-bs-target="#homeCarousel" data-bs-slide="next">
             <span class="carousel-control-next-icon"></span>
         </button>
     </div>
