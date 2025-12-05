@@ -6,6 +6,20 @@
     $address = htmlspecialchars($team['address'] ?? 'N/A');
     $statusLabel = ($team['is_active'] ?? 0) ? 'Active' : 'Inactive';
     $statusBadge = ($team['is_active'] ?? 0) ? 'success' : 'secondary';
+    
+    // --- CLASSIFICATION FIX: Convert ID to Name ---
+    $classificationId = (int)($team['classification'] ?? 1);
+    $classificationMap = [
+        2 => 'Medical',
+        3 => 'Fire Rescue',
+        4 => 'Search & Rescue',
+        5 => 'Logistics',
+        6 => 'Technical Support',
+        1 => 'Other',
+    ];
+    $classificationName = $classificationMap[$classificationId] ?? 'N/A (ID: ' . $classificationId . ')';
+    // ---------------------------------------------
+    
     $latitude = $team['latitude'] ?? null;
     $longitude = $team['longitude'] ?? null;
     $members = $team['members'] ?? [];
@@ -40,6 +54,11 @@
                         <small class="text-muted d-block">Email Address</small>
                         <span><?= $email ?></span>
                     </div>
+                    
+                    <div class="col-sm-6">
+                        <small class="text-muted d-block">Classification</small>
+                        <span><?= $classificationName ?></span>
+                    </div>
                     <div class="col-12">
                         <small class="text-muted d-block">Address</small>
                         <span><?= $address ?></span>
@@ -67,18 +86,15 @@
                 </div>
                 <?php endif; ?>
 
-                <!-- START: COLLAPSIBLE MEMBERS SECTION -->
                 <div class="card mt-4 border-0">
                     <div class="card-header bg-white border-bottom p-0 d-flex justify-content-between align-items-center" id="headingMembers<?= $teamId ?>">
                         <h6 class="text-primary mb-0 py-2"><i class="fas fa-users me-2"></i>Team Members (<?= count($members) ?>)</h6>
                         
-                        <!-- Toggle Button -->
                         <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMembers<?= $teamId ?>" aria-expanded="true" aria-controls="collapseMembers<?= $teamId ?>">
                             <i class="fas fa-chevron-down toggle-icon"></i>
                         </button>
                     </div>
 
-                    <!-- Collapsible Content -->
                     <div id="collapseMembers<?= $teamId ?>" class="collapse" aria-labelledby="headingMembers<?= $teamId ?>">
                         <div class="card-body p-0 pt-3">
                             <?php if (!empty($members)): ?>
@@ -99,9 +115,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- END: COLLAPSIBLE MEMBERS SECTION -->
-
-            </div>
+                </div>
             <div class="modal-footer justify-content-between">
                 <button 
                     class="btn btn-sm btn-success assign-btn" 
@@ -156,7 +170,7 @@
                             </tr>
                         </thead>
                         <tbody id="userListBody">
-                            </tbody>
+                        </tbody>
                     </table>
                 </div>
 
@@ -175,7 +189,21 @@ $(document).ready(function() {
     var currentTeamId = null;
 
     // JavaScript for rotating the chevron icon when collapsing/expanding
-    $('#teamModal<?= $teamId ?>').on('shown.bs.collapse hidden.bs.collapse', function (e) {
+    // NOTE: This must be updated to target the dynamically generated modal IDs
+    <?php foreach ($teams as $team): ?>
+    $('#teamModal<?= htmlspecialchars($team['team_id'] ?? '') ?>').on('show.bs.modal', function() {
+        // Ensure the collapse is correctly initialized/handled when the modal shows
+        const collapseElement = $(this).find('.collapse');
+        const icon = $(this).find('.toggle-icon');
+        // Initial state when modal opens (assuming members are initially collapsed or shown based on your CSS default)
+        if (collapseElement.hasClass('show')) {
+            icon.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+        } else {
+            icon.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+        }
+    });
+
+    $('#teamModal<?= htmlspecialchars($team['team_id'] ?? '') ?>').on('shown.bs.collapse hidden.bs.collapse', function (e) {
         var icon = $(e.target).prev().find('.toggle-icon');
         if (e.type == 'shown') {
             icon.removeClass('fa-chevron-down').addClass('fa-chevron-up');
@@ -183,6 +211,7 @@ $(document).ready(function() {
             icon.removeClass('fa-chevron-up').addClass('fa-chevron-down');
         }
     });
+    <?php endforeach; ?>
 
     $('#addMemberModal').on('show.bs.modal', function(e) {
         var button = $(e.relatedTarget);
@@ -206,19 +235,16 @@ $(document).ready(function() {
             success: function(response) {
                 $('#userLoadingIndicator').addClass('d-none');
                 
-                // FIX 1: Change response.users to response.data to match JSON structure
-                const users = response.data || []; // Use 'data' key, default to empty array
+                // Use 'data' key, default to empty array
+                const users = response.data || []; 
                 
-                // FIX 2: Check the length of the 'users' array (which is now response.data)
                 if (response.success && users.length > 0) {
                     let userHtml = '';
-                    // FIX 3: Iterate over the corrected 'users' variable
                     $.each(users, function(index, user) {
                         // Construct the table row dynamically
                         userHtml += '<tr>';
                         userHtml += '<td>' + (index + 1) + '</td>';
-                        // FIX 4: Use acc.username as a fallback if firstName/lastName is missing, 
-                        // and use mobileNum as a better fallback for contact info.
+                        // Use acc.username as a fallback if firstName/lastName is missing
                         userHtml += '<td>' + (user.firstName || '') + ' ' + (user.lastName || user.username) + '</td>';
                         userHtml += '<td>' + (user.email || user.mobileNum || 'N/A') + '</td>'; 
                         userHtml += '<td>' + (user.role || 'N/A') + ' / ' + (user.status || 'N/A') + '</td>';
@@ -251,7 +277,7 @@ $(document).ready(function() {
         button.prop('disabled', true).text('Assigning...'); 
 
         $.ajax({
-            url: 'ajax/assign_user_to_team.php', // *** NOTE: CREATE THIS FILE ***
+            url: 'ajax/assign_user_to_team.php', 
             method: 'POST',
             data: { 
                 team_id: currentTeamId, 
@@ -261,7 +287,7 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.success) {
                     alert('User successfully assigned to the team!');
-                    // OPTIONAL: Remove the row from the table or update its status
+                    // Remove the row from the table
                     button.closest('tr').remove(); 
                 } else {
                     alert('Assignment failed: ' + response.message);

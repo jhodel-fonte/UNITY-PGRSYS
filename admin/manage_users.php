@@ -83,7 +83,7 @@ unset($_SESSION['message']);
                                 <th>Email</th>
                                 <th>Status</th>
                                 <th>Details</th>
-                                <th>Action</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="userTableBody"> 
@@ -128,16 +128,15 @@ unset($_SESSION['message']);
                                 </td>
 
                                 <td>
-                                    <?php if($u['status'] === 'Pending' || $u['status'] === 'NoOtpReg'): ?>
+                                    <?php if($u['status'] == 'Pending'): ?>
                                         <button class="btn btn-sm btn-success action-btn" data-action="approve" data-userid="<?= $u['userId'] ?>">Approve</button>
                                         <button class="btn btn-sm btn-danger action-btn" data-action="reject" data-userid="<?= $u['userId'] ?>">Reject</button>
+                                    <?php elseif($u['status'] == 'Rejected'): ?>
+                                        <button class="btn btn-sm btn-danger action-btn" data-action="delete" data-userid="<?= $u['userId'] ?>">Delete</button>
+                                    <?php elseif($u['status'] == 'Approved' || $u['status'] == 'Active'): ?>
+                                        <button class="btn btn-sm btn-danger action-btn" data-action="delete" data-userid="<?= $u['userId'] ?>">Delete</button>
                                     <?php elseif($u['userId'] == $adminCurrentUser): ?>
                                         <span>Current Account</span>
-                                    <?php elseif($u['status'] === 'Approved' || $u['status'] === 'Active'): ?>
-                                        <button class="btn btn-sm btn-danger action-btn" data-action="delete" data-userid="<?= $u['userId'] ?>">Delete</button>
-                                    <?php elseif($u['status'] === 'Rejected'): ?>
-
-                                        <button class="btn btn-sm btn-danger action-btn" data-action="delete" data-userid="<?= $u['userId'] ?>">Delete</button>
                                     <?php else: ?>
                                         <span>No Action</span>
                                     <?php endif; ?>
@@ -156,8 +155,6 @@ unset($_SESSION['message']);
 $modal_users = (is_array($users) && !isset($users['success'])) ? $users : [];
 
 foreach($modal_users as $u): 
-    // IMPORTANT: Use 'include' (not include_once) because we need this multiple times
-    // Ensure the path 'components/userDetails.php' is correct relative to this file
     if(file_exists('components/userDetails.php')) {
         include 'components/userDetails.php';
     }

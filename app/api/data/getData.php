@@ -159,6 +159,17 @@ try {
             ];
         }
 
+        //get response tea members
+        if (isset($_GET['data']) && $_GET['data'] == 'NoTeamUser') {
+            include_once __DIR__ .'/../../database/team_table.php';
+            $users = getNotAssignedResponseUser();
+            
+            $response = [
+                'success' => true,
+                'data' => $users
+            ];
+        }
+
     }
 
 } catch (Exception $e) {

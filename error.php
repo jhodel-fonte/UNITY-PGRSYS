@@ -3,7 +3,7 @@
 $errorCode = $_GET['code'] ?? '404';
 $errorTitle = '';
 $errorMessage = '';
-$redirectLink = 'app/controllers/logout.php'; 
+$redirectLink = 'app/controllers/logout.php?logout=1'; 
 
 switch ($errorCode) {
     case '404':
