@@ -4,13 +4,11 @@ session_start();
 require_once __DIR__ .'../../database/comms.php';
 
 if (isset($_GET['image']) && $_GET['image'] == 'id') {
-    // Set headers for JSON response
+
     header('Content-Type: application/json');
 
-    // Define the directory where images will be saved
     $uploadDir = '../../uploads/';
 
-    // Ensure the directory exists and is writable
     if (!is_dir($uploadDir)) {
         mkdir($uploadDir, 0777, true);
     }

@@ -188,14 +188,11 @@ $(document).ready(function() {
     
     var currentTeamId = null;
 
-    // JavaScript for rotating the chevron icon when collapsing/expanding
-    // NOTE: This must be updated to target the dynamically generated modal IDs
     <?php foreach ($teams as $team): ?>
     $('#teamModal<?= htmlspecialchars($team['team_id'] ?? '') ?>').on('show.bs.modal', function() {
-        // Ensure the collapse is correctly initialized/handled when the modal shows
         const collapseElement = $(this).find('.collapse');
         const icon = $(this).find('.toggle-icon');
-        // Initial state when modal opens (assuming members are initially collapsed or shown based on your CSS default)
+
         if (collapseElement.hasClass('show')) {
             icon.removeClass('fa-chevron-down').addClass('fa-chevron-up');
         } else {
@@ -268,35 +265,61 @@ $(document).ready(function() {
         var button = $(this);
         var userId = button.data('userid');
         
-        if (!currentTeamId) {
-            alert('Error: Could not determine the current team.');
+        if (typeof currentTeamId === 'undefined' || !currentTeamId) {
+            Swal.fire('Error', 'Could not determine the current team.', 'error');
             return;
         }
         
-        // Disable button and show loader feedback
-        button.prop('disabled', true).text('Assigning...'); 
+        Swal.fire({
+            title: 'Assign User?',
+            text: `Assign User ID ${userId} to the current team?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#28a745',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, Assign',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Processing...',
+                    text: 'Assigning user. Please wait.',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                
+                button.prop('disabled', true).text('Assigning...'); 
 
-        $.ajax({
-            url: 'ajax/assign_user_to_team.php', 
-            method: 'POST',
-            data: { 
-                team_id: currentTeamId, 
-                user_id: userId 
-            },
-            dataType: 'json',
-            success: function(response) {
-                if (response.success) {
-                    alert('User successfully assigned to the team!');
-                    // Remove the row from the table
-                    button.closest('tr').remove(); 
-                } else {
-                    alert('Assignment failed: ' + response.message);
-                    button.prop('disabled', false).text('Assign');
-                }
-            },
-            error: function() {
-                alert('An error occurred during assignment.');
-                button.prop('disabled', false).text('Assign');
+                $.ajax({
+                    url: '../app/controllers/add_members.php', 
+                    method: 'POST',
+                    data: { 
+                        team_id: currentTeamId, 
+                        user_id: userId 
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        Swal.close();
+                        
+                        if (response.success) {
+                            Swal.fire('Success!', 'User successfully assigned to the team.', 'success');
+                            button.closest('tr').remove(); 
+                        } else {
+                            
+                            Swal.fire('Assignment Failed', response.message || 'An unknown error occurred on the server.', 'error');
+                            button.prop('disabled', false).text('Assign');
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        Swal.close(); // Close processing Swal
+                        console.error('AJAX Error:', textStatus, errorThrown, jqXHR);
+                        Swal.fire('Connection Error', 'An error occurred during assignment. Check your network connection.', 'error');
+                        button.prop('disabled', false).text('Assign');
+                    }
+                });
             }
         });
     });

@@ -148,9 +148,9 @@ $alertClass = "";
     </div>
 </div>
 
-
+<?php //include __DIR__ .'/components/teamDetails.php'; ?>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="../admin/assets/admin.js"></script>
+<!-- <script src="../admin/assets/admin.js"></script> -->
 <script>
 
     // Global variable to store the ID of the team being assigned members
@@ -193,12 +193,6 @@ $alertClass = "";
                     $('#assignTeamIdDisplay').text(currentTeamId);
                     $('#userLoadingIndicator').removeClass('d-none');
                     fetchAvailableUsers(currentTeamId);
-
-                    // Show the modal
-                    const addMemberModal = new bootstrap.Modal(document.getElementById('addMemberModal'));
-                    addMemberModal.show();
-                    
-                    // OPTIONAL: Clear the form after successful team creation
                     form[0].reset(); 
                 } else {
                     // Display error message from the PHP script

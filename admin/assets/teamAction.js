@@ -65,26 +65,25 @@
         return selectedTeamId;
     }
 
-    async function confirmActionOverride(action, id) {
+    // Renamed and fixed the confusing confirmActionOverride function
+    async function confirmAction(action, id) {
         const messages = {
-            approve: "Approve this report?",
+            approve: "Approve and Assign this report?",
             reject: "Reject this report? (This action will delete it.)",
             delete: "Permanently delete this record?",
             edit: "Edit this record?"
         };
 
-        Swal.fire({
-            title: messages[action] || "Are you sure?1111",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#198754",
-            cancelButtonColor: "#6c757d",
-            confirmButtonText: "Yes, continuess"
-        });
-
         try {
             let selectedTeamId = null;
 
+            // 1. If action is 'approve', first get the team selection
+            if (action === 'approve') {
+                // This calls the SweetAlert prompt that returns the team ID
+                selectedTeamId = await confirmActionWithTeamSelection(action, id); 
+            }
+
+            // 2. Show Final Confirmation (This replaces the duplicate/unawaited Swal.fire)
             const result = await Swal.fire({
                 title: messages[action] || "Are you sure?",
                 icon: "warning",
@@ -98,32 +97,42 @@
                 return;
             }
 
+            // 3. Perform Redirect/Action
             const url = new URL(window.location.href);
             url.searchParams.set("action", action);
             url.searchParams.set("id", id);
             if (selectedTeamId) {
                 url.searchParams.set("team_id", selectedTeamId);
             }
+            
+             // Show a temporary loading screen before redirecting
+             Swal.fire({
+                title: 'Processing...',
+                text: 'Redirecting to complete action. Please wait.',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+            
             window.location.href = url.toString();
 
         } catch (error) {
+            // Handle cancellation from team selection or other errors
             if (error && error.message === "Team selection cancelled") {
+                Swal.fire("Action Cancelled", "Response team assignment was cancelled.", "info");
                 return;
             }
-            console.error("Action cancelled or failed:", error);
-            if (error && error.message) {
-                Swal.fire("Action cancelled", error.message, "info");
-            }
+            console.error("Action failed:", error);
+            Swal.fire("Error!", error.message || "An unexpected error occurred.", "error");
         }
     }
-
-    window.confirmAction = confirmActionOverride;
     
-})();
-
-async function teamSelect($id) {
+    // Make functions globally available
+    window.confirmAction = confirmAction; 
+    // FIX: Corrected typo in global assignment
+    window.confirmActionWithTeamSelection = confirmActionWithTeamSelection;
     
-}
+})(); 
+
 
 async function confirmTeamAction(action, id) {
 
@@ -134,28 +143,69 @@ async function confirmTeamAction(action, id) {
             text: "This action cannot be undone.",
             icon: "warning",
             showCancelButton: true,
-            confirmButtonColor: "#dc3545",
+            confirmButtonColor: "#dc3545", // Red for danger
             cancelButtonColor: "#6c757d",
             confirmButtonText: "Yes, delete it",
             cancelButtonText: "Cancel"
         });
 
         if (result.isConfirmed) {
-            // TODO: Implement delete functionality
-            // For now, redirect with action parameter
-            const url = new URL(window.location.href);
-            url.searchParams.set("action", "delete");
-            url.searchParams.set("id", id);
-            window.location.href = url.toString();
+            
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Deleting team. Please wait.',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+            
+            try {
+                
+                const response = await fetch("../app/controllers/teamAction.php", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded', 
+                    },
+                    // Send action and id to the controller
+                    body: `action=${encodeURIComponent(action)}&id=${encodeURIComponent(id)}`
+                });
+
+                // Check for non-200 HTTP status
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                Swal.close(); // Close the processing dialog
+
+                // 3. Handle Server Response
+                if (data.success) {
+                    // Success: Show message and reload the page
+                    Swal.fire('Deleted!', data.message || 'Team successfully deleted.', 'success').then(() => {
+                        location.reload(); 
+                    });
+                } else {
+                    // Failure reported by the server (e.g., database error)
+                    Swal.fire('Error!', data.message || 'Deletion failed due to an unknown server error.', 'error');
+                }
+
+            } catch (error) {
+                // 4. Handle Network/Connection Error
+                Swal.close();
+                console.error('Delete Team Fetch Error:', error);
+                Swal.fire('Connection Error!', `Could not delete team. Details: ${error.message}`, 'error');
+            }
         }
         return;
     }
 
     // Default fallback for unknown actions
-    console.warn(`Unknown action: ${action}`);
+    console.warn(`Unknown team action: ${action}`);
 }
 
-// Member management functions
+
+const MEMBER_ACTION_ENDPOINT = "../app/controllers/add_members.php"; // Suggested new endpoint
+
 function openAddMemberModal(teamId) {
     Swal.fire({
         title: "Add Team Member",
@@ -166,6 +216,7 @@ function openAddMemberModal(teamId) {
         showCancelButton: true,
         confirmButtonText: "Add Member",
         cancelButtonText: "Cancel",
+        focusConfirm: false, 
         didOpen: () => {
             const searchInput = document.getElementById('swal-member-search');
             const resultsDiv = document.getElementById('swal-member-results');
@@ -177,8 +228,8 @@ function openAddMemberModal(teamId) {
             });
         },
         preConfirm: () => {
-            // TODO: Get selected member and add to team
-            const selectedMember = null; // Get from search results
+            // TODO: Get selected member ID from search results
+            const selectedMember = null; 
             if (!selectedMember) {
                 Swal.showValidationMessage('Please select a member');
                 return false;
@@ -189,7 +240,7 @@ function openAddMemberModal(teamId) {
         if (result.isConfirmed) {
             // TODO: Call API to add member to team
             console.log('Adding member to team:', teamId, result.value);
-            Swal.fire("Success", "Member added to team", "success").then(() => {
+            Swal.fire("Success", "Member added to team (Simulated)", "success").then(() => {
                 location.reload();
             });
         }
@@ -207,7 +258,7 @@ function openEditMemberModal(memberId) {
         confirmButtonText: "Save Changes",
         cancelButtonText: "Cancel",
         didOpen: () => {
-            // TODO: Load current member data
+            // TODO: Load current member data (e.g., via Fetch API)
             console.log('Loading member data for:', memberId);
         },
         preConfirm: () => {
@@ -225,7 +276,7 @@ function openEditMemberModal(memberId) {
         if (result.isConfirmed) {
             // TODO: Call API to update member
             console.log('Updating member:', memberId, result.value);
-            Swal.fire("Success", "Member updated", "success").then(() => {
+            Swal.fire("Success", "Member updated (Simulated)", "success").then(() => {
                 location.reload();
             });
         }
@@ -244,9 +295,17 @@ function removeMember(teamId, memberId) {
         cancelButtonText: "Cancel"
     }).then((result) => {
         if (result.isConfirmed) {
-            // TODO: Call API to remove member from team
+            // TODO: Replace with proper API call (currently redirects)
             console.log('Removing member:', memberId, 'from team:', teamId);
             
+            // Show processing screen before redirecting
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Removing member. Please wait.',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
             // For now, redirect with action parameters
             const url = new URL(window.location.href);
             url.searchParams.set("action", "remove_member");
@@ -261,7 +320,4 @@ function removeMember(teamId, memberId) {
 window.openAddMemberModal = openAddMemberModal;
 window.openEditMemberModal = openEditMemberModal;
 window.removeMember = removeMember;
-window.confirmAction = confirmAction;
-window.confirmActionWithTeamSelection() = confirmActionWithTeamSelection()
-
-// window.confirmAction = confirmActionOverride;
+window.confirmTeamAction = confirmTeamAction;

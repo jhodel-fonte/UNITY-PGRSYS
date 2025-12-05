@@ -143,7 +143,40 @@ function updateTeam(array $data): bool {
     }
 }
 
+function addMembertoTeam($teamid, $userId) {
+    $sql = "INSERT INTO `members_team`(`team_id`, `member_id`) VALUES (?, ?)";
+    
+    $values = [$teamid, $userId]; 
 
+    try {
+    
+        $database = new Database();
+        $conn = $database->getConn();
+        $stmt = $conn->prepare($sql);
+        $success = $stmt->execute($values);
+        return $success && $stmt->rowCount() > 0;
+        
+    } catch (PDOException $e) {
+        
+        error_log("Database Error in addMembertoTeam: " . $e->getMessage());
+        throw $e;
+    }
+}
 
+function deleteTeam($team_id) {
+    $sql = "DELETE FROM response_team WHERE `team_id` = ?";
+    $values = [$team_id]; 
 
-?>
+    try {
+        $database = new Database();
+        $conn = $database->getConn();
+        $stmt = $conn->prepare($sql);
+        $success = $stmt->execute($values);
+        
+        return $success && $stmt->rowCount() > 0;
+        
+    } catch (PDOException $e) {
+        containlog('ERROR', "Database Error executing query in Delete Teams. Error:", null, 'database.log'); 
+        return $e;
+    }
+}

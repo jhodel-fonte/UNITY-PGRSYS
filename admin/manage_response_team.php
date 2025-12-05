@@ -2,17 +2,16 @@
     require_once __DIR__ .'../../app/utils/log.php';
     require_once __DIR__ .'../../app/api/data/dataProcess.php';
 
-    $data_source_url = "http://localhost/pgrs-g6/request/getData.php?data=teams";//changes when deployed
-    // Get teams data (assuming $teams contains the team data)
+    $data_source_url = "http://localhost/UNTY-PGRSYS/app/api/data/getData.php?data=teams";//changes when deployed
     $teams = getDataSource($data_source_url); 
 
     $status = $_GET['status'] ?? 'All';
     if ($status !== 'All' && is_array($teams)) {
-        // Check for API error
+        
         if (isset($teams['success']) && $teams['success'] === false) {
-            // Keep the error message
+        
         } else {
-            // Filter teams by is_active status (1 or 0)
+        
             $teams = array_filter(
                 $teams,
                 fn($r) => isset($r['is_active']) && (string)$r['is_active'] === (string)$status
@@ -20,7 +19,6 @@
         }
     }
 
-    // Define available statuses for filter buttons
     $statuses = ['All' => 'All','Active' => '1','Inactive' => '0'];
     ?>
 
@@ -206,7 +204,87 @@
         });
     </script>
 
-    <script src="../admin/assets/admin.js"></script>
-    <script src="../admin/assets/teamAction.js"></script>
+    <script>
+        // if it's not defined in the PHP script block) ---
+        const TEAM_ACTION_ENDPOINT = "../app/controllers/team_action.php"; 
+
+        async function confirmTeamAction(action, id) {
+
+            // For delete action, show confirmation dialog
+            if (action === 'delete') {
+                const result = await Swal.fire({
+                    title: "Permanently delete this team?",
+                    text: "This action cannot be undone.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#dc3545", // Red for danger
+                    cancelButtonColor: "#6c757d",
+                    confirmButtonText: "Yes, delete it",
+                    cancelButtonText: "Cancel"
+                });
+
+                if (result.isConfirmed) {
+                    
+                    // 1. Show Processing Dialog
+                    Swal.fire({
+                        title: 'Processing...',
+                        text: 'Deleting team. Please wait.',
+                        allowOutsideClick: false,
+                        didOpen: () => { Swal.showLoading(); }
+                    });
+                    
+                    try {
+                        // 2. Perform AJAX (Fetch) Call
+                        const response = await fetch(TEAM_ACTION_ENDPOINT, {
+                            method: 'POST',
+                            headers: {
+                                // Crucial: Use URL-encoded content type for PHP $_POST access
+                                'Content-Type': 'application/x-www-form-urlencoded', 
+                            },
+                            // Send action and id as URL-encoded body
+                            body: `action=${encodeURIComponent(action)}&id=${encodeURIComponent(id)}`
+                        });
+
+                        // Check for non-200 HTTP status
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+
+                        const data = await response.json();
+                        
+                        Swal.close(); // Close the processing dialog
+
+                        // 3. Handle Server Response
+                        if (data.success) {
+                            // Success: Show message and reload the page
+                            Swal.fire('Deleted!', data.message || 'Team successfully deleted.', 'success').then(() => {
+                                // Reload the page to update the table/list
+                                location.reload(); 
+                            });
+                        } else {
+                            // Failure reported by the server (e.g., database error)
+                            Swal.fire('Error!', data.message || 'Deletion failed due to an unknown server error.', 'error');
+                        }
+
+                    } catch (error) {
+                        // 4. Handle Network/Connection Error
+                        Swal.close();
+                        console.error('Delete Team Fetch Error:', error);
+                        Swal.fire('Connection Error!', `Could not delete team. Details: ${error.message}`, 'error');
+                    }
+                }
+                return;
+            }
+
+            // Default fallback for unknown actions
+            console.warn(`Unknown team action: ${action}`);
+        }
+
+        // Make the function globally available if it's not in the IIFE block
+        window.confirmTeamAction = confirmTeamAction;
+    </script>
+
+    <!-- <script src="../admin/assets/admin.js"></script> -->
+    <!-- <script src="../admin/assets/teamAction.js"></script> -->
     </body>
     </html>

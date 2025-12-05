@@ -1,7 +1,8 @@
 /* =====================================================
-    USER MANAGEMENT LOGIC
+    USER MANAGEMENT LOGIC (manage_users.php)
 ===================================================== */
 
+const USER_ACTION_ENDPOINT = '../app/controllers/userAction.php';
 
 function createUserRowHtml(u, adminCurrentUser) {
 

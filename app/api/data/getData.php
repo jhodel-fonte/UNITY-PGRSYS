@@ -66,20 +66,27 @@ try {
             $teamClass = new Teams();
             $teams = $teamClass->getAllTeams();
 
+            if (isset($teams['success']) && $teams['success'] == false ) {
+
+                $response = [
+                    'success' => false,
+                    'message' => 'Failed to fetch teams: ' . ($teams['message'] ?? 'Unknown error.')
+                ];
+
+                $teams = [];
+            }
+
             $members = $teamClass->getAllTeamMembers();
             
-            if (isset($teams['success']) && $teams['success'] == false ) {
-                throw new Exception('Failed to fetch teams');
+            $memberData = [];
+
+            if (is_array($members) && !(isset($members['success']) && $members['success'] === false)) {
+                $memberData = $members;
             }
 
-            if (isset($members['success']) && $members['success'] == false ) {
-                throw new Exception('Failed to fetch team members');
-            }
-
-            // Group members by team_id
             $membersByTeam = [];
-            if (is_array($members)) {
-                foreach ($members as $member) {
+            if (is_array($memberData)) {
+                foreach ($memberData as $member) {
                     $teamId = $member['team_id'] ?? null;
                     if (!$teamId) {
                         continue;
@@ -91,7 +98,6 @@ try {
                 }
             }
 
-            // Merge members into each team
             foreach ($teams as &$team) {
                 $teamId = $team['team_id'] ?? $team['id'] ?? null;
                 $team['members'] = $teamId && isset($membersByTeam[$teamId]) ? $membersByTeam[$teamId] : [];

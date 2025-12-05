@@ -41,7 +41,7 @@ unset($_SESSION['message']);
 
         <div class="card-custom p-4">
             <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-                <h3 class="text">Manage User Requests</h3>
+                <h3 class="text">Manage Team Members</h3>
             </div>
 
             <div class="d-flex justify-content-center mb-3 gap-2 flex-wrap">
