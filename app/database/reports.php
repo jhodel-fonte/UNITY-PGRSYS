@@ -37,6 +37,24 @@ function getAllReportImages() {
     }
 }
 
+function getReportByUserId(int $id) {
+    $db = new Database();
+    $conn = $db->getConn();
+    
+    $query = "SELECT * FROM `reports` WHERE `user_id` = ?";
+    
+    try {
+        $stmt = $conn->prepare($query);
+        $stmt->execute([$id]);        
+        $reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $reports; 
+        
+    } catch (PDOException $e) {
+        error_log("Database error in getReportByUserId({$id}): " . $e->getMessage());
+        return false;
+    }
+}
+
 function createReport($dataArray) {
     $db = new Database();
     $conn = $db->getConn();
@@ -72,6 +90,39 @@ function createReport($dataArray) {
         return false;
     }
 }
+
+function updateReportMLData(array $report, int $id) {
+
+    $summary = $report['summary'] ?? 'Unknown Summary';
+    $mlCategory = $report['ml_category'] ?? 'Unknown Category';
+    $legitStatus = $report['legit_status'] ?? 'Unknown';
+
+    $combinedMlCategory = $summary . ' - ' . $mlCategory;
+
+    $db = new Database();
+    $conn = $db->getConn();
+    
+    $query = "UPDATE `reports` SET `ml_category`= ?, `legit_status` = ? WHERE `id` = ?";
+    
+    $values = [
+        $combinedMlCategory, 
+        $legitStatus,        
+        $id                 
+    ];
+
+    try {
+        $stmt = $conn->prepare($query);
+        $success = $stmt->execute($values);
+        return $success && $stmt->rowCount() > 0;
+
+    } catch (PDOException $e) {
+        error_log("Database Error in updateReportMLData for report ID {$id}: " . $e->getMessage());
+        throw $e;
+    }
+}
+
+
+
 // //test
 //     $dataArray = [
 //         'user_id'       => $user_id,
@@ -86,5 +137,3 @@ function createReport($dataArray) {
 //     ];
 
 // createReport($dataArray)
-
-?>

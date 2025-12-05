@@ -7,16 +7,38 @@ document.addEventListener("DOMContentLoaded", () => {
     const mapDiv = document.getElementById("map");
     // Only initialize map if the element exists
     if (mapDiv) {
-        // Initialize small map
+        // Initialize small map centered on a default location (e.g., Padre Garcia, Batangas)
         var map = L.map("map").setView([13.9333, 121.1167], 13);
 
         L.tileLayer(
+            // NOTE: Ensure this Geoapify API key is valid.
             "https://maps.geoapify.com/v1/tile/osm-bright/{z}/{x}/{y}.png?apiKey=6cbe5b314ed44817b7e1e51d35b6ec27",
             { maxZoom: 19 }
         ).addTo(map);
 
-        L.marker([13.9333, 121.1167]).addTo(map).bindPopup("Test Pin");
+        // --- DYNAMIC MARKER ADDITION (CORRECTION) ---
+        // 'mapMarkers' is expected to be defined in a <script> tag in the HTML/PHP file
+        if (typeof mapMarkers !== 'undefined' && Array.isArray(mapMarkers)) {
+            const markersLayer = L.layerGroup();
+            
+            mapMarkers.forEach(markerData => {
+                if (markerData.lat && markerData.lng) {
+                    L.marker([markerData.lat, markerData.lng])
+                        .addTo(markersLayer)
+                        .bindPopup(`<strong>Report Location:</strong><br>${markerData.title || 'Untitled Report'}`);
+                }
+            });
 
+            markersLayer.addTo(map);
+
+            // Automatically adjust map view to fit all markers
+            if (mapMarkers.length > 0) {
+                const bounds = new L.LatLngBounds(mapMarkers.map(m => [m.lat, m.lng]));
+                map.fitBounds(bounds, { padding: [20, 20] });
+            }
+        }
+        // --- END DYNAMIC MARKER ADDITION ---
+        
         /* CLICK MAP → ENTER FULLSCREEN */
         mapDiv.addEventListener("click", () => {
             if (mapDiv.requestFullscreen) {
@@ -24,6 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 mapDiv.classList.add("fullscreen-fix"); // Backup for Safari/iOS
             }
+            // Invalidate size is crucial after changing the map container's size/visibility
             setTimeout(() => { map.invalidateSize(); }, 300);
         });
 
@@ -31,6 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.addEventListener("fullscreenchange", () => {
             if (!document.fullscreenElement) {
                 mapDiv.classList.remove("fullscreen-fix");
+                // Invalidate size is crucial after changing the map container's size/visibility
                 setTimeout(() => { map.invalidateSize(); }, 300);
             }
         });
@@ -123,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             style="border:0;"
                             loading="lazy"
                             allowfullscreen
-                            src="https://www.google.com/maps?q=$${report.latitude},${report.longitude}&z=14&output=embed">
+                            src="https://www.google.com/maps?q=$$${report.latitude},${report.longitude}&z=14&output=embed">
                         </iframe>`;
                 } else {
                     mapContainer.innerHTML = `<p class="text-center text-muted">No map location available.</p>`;

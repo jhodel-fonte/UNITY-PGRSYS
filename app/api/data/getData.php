@@ -59,6 +59,45 @@ try {
             ];
                 
         }
+        //report by id
+        if (isset($_GET['data']) && $_GET['data'] == 'reportbyId' && isset($_GET['id'])) {
+            
+            $reports =  getReportByUserId($_GET['id']);
+            $images = getAllReportImages();
+            
+            if ($reports === false) {
+                throw new Exception('Failed to fetch reports');
+            }
+
+            if ($images === false) {
+                $images = [];
+            }
+
+            // Group images by report_id
+            $imagesByReportId = [];
+            foreach ($images as $image) {
+                $reportId = $image['report_id'] ?? null;
+                if ($reportId) {
+                    if (!isset($imagesByReportId[$reportId])) {
+                        $imagesByReportId[$reportId] = [];
+                    }
+                    $imagesByReportId[$reportId][] = $image;
+                }
+            }
+            
+            // Merge images into each report
+            foreach ($reports as &$report) {
+                $reportId = $report['id'] ?? null;
+                $report['images'] = $imagesByReportId[$reportId] ?? [];
+            }
+            unset($report);
+
+            $response = [
+                'success' => true,
+                'data' => $reports
+            ];
+                
+        }
 
         //Get Response Team List
         if (isset($_GET['data']) && $_GET['data'] == 'teams') {

@@ -1,61 +1,21 @@
 <?php
-// TEMP DATA (Replace later with database)
-$myReports = [
-        [
-        "id" => 1,
-        "category" => "Fire",
-        "status" => "Pending",
-        "description" => "poop near barangay hall.",
-        "date" => "Nov 25, 2025",
-        "location" => "Barangay Hall",
-        "image" => "fire.jpg"
-    ],
-    [
-        "id" => 2,
-        "category" => "Others",
-        "status" => "Ongoing",
-        "description" => "Two vehicles collided.",
-        "date" => "Nov 20, 2025",
-        "location" => "National Highway",
-        "image" => "accident.jpg"
-    ],
-    [
-        "id" => 3,
-        "category" => "Electrical Hazzard",
-        "status" => "Pending",
-        "description" => "Dog stuck in drainage.",
-        "date" => "Nov 23, 2025",
-        "location" => "San Jose St.",
-        "image" => "rescue.jpg"
-    ],
-    [
-        "id" => 4,
-        "category" => "Rescue",
-        "status" => "Resolved",
-        "description" => "Fallen tree blocking road.",
-        "date" => "Nov 18, 2025",
-        "location" => "Brgy. Mabini",
-        "image" => "pg.jpg"
-    ],
-    [
-        "id" => 5,
-        "category" => "fire",
-        "status" => "Pending",
-        "description" => "broken street light.",
-        "date" => "Nov 23, 2025",
-        "location" => "San Jose St.",
-        "image" => "rescue.jpg"
-    ],
-    [
-        "id" => 6,
-        "category" => "Others",
-        "status" => "Resolved",
-        "description" => "There is something on the tree.",
-        "date" => "Nov 18, 2025",
-        "location" => "Brgy. Mabini",
-        "image" => "tree.jpg"
-    ]
-];
+session_start();
+
+require_once __DIR__ . '../../../app/api/data/dataProcess.php'; 
+
+$user = (isset($_SESSION['userLoginData'])) ? $_SESSION['userLoginData']['data'] : null;
+
+if (!$user || !isset($user['pgCode'])) {
+    header("Location: login.php"); 
+    exit;
+}
+
+$pgCode = $user['pgCode'];
+
+$data_source_url = "http://localhost/UNTY-PGRSYS/app/api/data/getData.php?data=reportbyId&id=" . $pgCode;
+$userReports = [];
+$userReports = getDataSource($data_source_url);
+
 ?>
 
 <!DOCTYPE html>
@@ -68,6 +28,7 @@ $myReports = [
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
     <link rel="stylesheet" href="assets/user.css">
 
 </head>
@@ -97,7 +58,7 @@ $myReports = [
                 <thead class="table-dark ">
                     <tr>
                         <th>ID</th>
-                        <th>Category</th>
+                        <th>Classification</th>
                         <th>Status</th>
                         <th>Date</th>
                         <th class="text-center">Actions</th>
@@ -105,34 +66,54 @@ $myReports = [
                 </thead>
 
                 <tbody id="reportTableBody">
-<?php foreach ($myReports as $r): ?>
-    <tr data-status="<?= $r['status'] ?>">
-        <td><?= $r["id"]; ?></td>
-        <td><?= $r["category"]; ?></td>
-
+<?php 
+if (empty($userReports)): ?>
+    <tr>
+        <td colspan="5" class="text-center text-muted">No reports found.</td>
+    </tr>
+<?php 
+else:
+// Loop through the API data ($userReports)
+foreach ($userReports as $r): 
+    // Determine status for class/filtering
+    $status = htmlspecialchars($r['status'] ?? 'N/A');
+    
+    // Get the category name (assuming 'classification' holds the category ID, but we display the ID for now)
+    $categoryDisplay = htmlspecialchars($r['classification'] ?? 'N/A');
+    
+    // Convert the data array to a JSON string for the 'View' button
+    $reportJson = json_encode($r);
+?>
+    <tr data-status="<?= $status ?>">
+        <td><?= htmlspecialchars($r["id"]); ?></td>
+        <td><?= $categoryDisplay; ?></td> 
+        
         <td>
             <span class="badge 
-                <?= $r["status"] === "Resolved" ? "bg-success" : ($r["status"] === "Ongoing" ? "bg-primary" : "bg-warning text-dark"); ?>">
-                <?= $r["status"]; ?>
+                <?= $status === "Resolved" ? "bg-success" : ($status === "Ongoing" ? "bg-primary" : "bg-warning text-dark"); ?>">
+                <?= $status; ?>
             </span>
         </td>
 
-        <td><?= $r["date"]; ?></td>
+        <td><?= date("M d, Y", strtotime($r["created_at"] ?? '')); ?></td>
 
         <td class="text-center">
             <button 
                 class="btn btn-sm btn-outline-primary view-btn"
-                data-report='<?= json_encode($r); ?>'>
+                data-report='<?= htmlspecialchars($reportJson, ENT_QUOTES, 'UTF-8'); ?>'>
                 View
             </button>
 
-            <?php if ($r["status"] !== "Resolved" && $r["status"] !== "Ongoing"): ?>
+            <?php if ($status !== "Resolved" && $status !== "Ongoing"): ?>
                 <button class="btn btn-sm btn-outline-secondary edit-btn">Edit</button>
                 <button class="btn btn-sm btn-outline-danger delete-btn">Delete</button>
             <?php endif; ?>
         </td>
     </tr>
-<?php endforeach; ?>
+<?php 
+endforeach; 
+endif;
+?>
 </tbody>
 
 
@@ -145,7 +126,6 @@ $myReports = [
 
 
 
-<!-- VIEW MODAL -->
 <div class="modal fade" id="viewModal" tabindex="-1">
   <div class="modal-dialog modal-lg modal-dialog-centered">
 
@@ -178,6 +158,114 @@ $myReports = [
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="assets/user.js"></script>
-<script src="assets/view.js"></script>
+<script>
+// --- view.js logic integrated here ---
+$(document).ready(function() {
+    
+    // --- 1. Filter and Search Logic ---
+    
+    // Filter by status
+    $('.filter-btn').on('click', function() {
+        $('.filter-btn').removeClass('active');
+        $(this).addClass('active');
+        const filterValue = $(this).data('filter');
+        
+        $('#reportTableBody tr').each(function() {
+            const rowStatus = $(this).data('status');
+            if (filterValue === 'All' || rowStatus === filterValue) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
+
+    // Search functionality
+    $('#searchInput').on('keyup', function() {
+        const searchText = $(this).val().toLowerCase();
+        
+        $('#reportTableBody tr').each(function() {
+            const rowText = $(this).text().toLowerCase();
+            const isVisibleByFilter = $('.filter-btn.active').data('filter') === 'All' || $(this).data('status') === $('.filter-btn.active').data('filter');
+            
+            if (rowText.includes(searchText) && isVisibleByFilter) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
+    
+    // --- 2. View Modal Logic ---
+    
+    let map = null;
+    let marker = null;
+    
+    $('.view-btn').on('click', function() {
+        const reportData = JSON.parse($(this).attr('data-report'));
+        
+        // 1. Populate Text Fields
+        $('#modalCategory').text(reportData.classification); // Using 'classification' from API data
+        $('#modalStatus').text(reportData.status);
+        $('#modalDate').text(new Date(reportData.created_at).toLocaleDateString()); // Format date nicely
+        $('#modalLocation').text(reportData.location);
+        $('#modalDescription').text(reportData.description);
+        
+        // 2. Handle Image
+        const imagePath = (reportData.images && reportData.images.length > 0) ? reportData.images[0].photo : null;
+        
+        if (imagePath) {
+            // FIX: Remove '../' prefixes from the path if they were added for the API, assuming root is needed
+            // The path in your JSON sample is: "..\/uploads\/reports\/..."
+            const cleanImagePath = imagePath.replace(/\.\.\//g, ''); 
+            $('#modalImage').attr('src', cleanImagePath).show();
+        } else {
+            $('#modalImage').hide();
+        }
+
+        // 3. Handle Map
+        const lat = parseFloat(reportData.latitude);
+        const lng = parseFloat(reportData.longitude);
+
+        const modalElement = document.getElementById('viewModal');
+        const viewModal = new bootstrap.Modal(modalElement);
+        
+        // Show modal first, then initialize map once it's visible
+        viewModal.show();
+        
+        // Event fires when the modal has been made visible to the user
+        modalElement.addEventListener('shown.bs.modal', function () {
+            
+            if (isNaN(lat) || isNaN(lng)) {
+                // If location data is invalid, hide map or display message
+                $('#modalMap').html('<p class="text-center text-muted">Location data unavailable.</p>');
+                if (map) map.remove(); // Remove existing map instance
+                map = null;
+                return;
+            }
+
+            // Map initialization/update logic
+            if (map === null) {
+                // Initialize map if it doesn't exist
+                map = L.map('modalMap').setView([lat, lng], 16);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap'
+                }).addTo(map);
+                marker = L.marker([lat, lng]).addTo(map);
+            } else {
+                // Map already exists, just update view and marker
+                map.setView([lat, lng], 16);
+                marker.setLatLng([lat, lng]);
+            }
+            
+            // Invalidate size is necessary for Leaflet inside a Bootstrap modal
+            map.invalidateSize();
+        });
+    });
+});
+// --- End of view.js logic ---
+</script>
+<script src="assets/user.js"></script> 
+</body>
 </html>

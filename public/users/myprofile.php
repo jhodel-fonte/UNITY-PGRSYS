@@ -10,13 +10,11 @@ if (!is_array($admin)) {
     $admin = [];
 }
 
-// Define $profileImage (ensure this is correctly set from $admin data or a default)
-$profileImage = 'default_profile.png'; // Default image
-if (!empty($admin['profileImage'])) { // Assuming 'profileImage' key exists
+$profileImage = 'default_profile.png'; 
+if (!empty($admin['profileImage'])) {
     $profileImage = $admin['profileImage'];
 }
 
-// The POST handling block is still removed from here, as per our AJAX plan.
 ?>
 
 <!DOCTYPE html>
@@ -148,11 +146,11 @@ if (!empty($admin['profileImage'])) { // Assuming 'profileImage' key exists
                             <input type="text" class="form-control" value="<?= htmlspecialchars($admin['date_created'] ?? '') ?>" disabled>
                         </div>
 
-                        <div class="col-md-6 mb-3">
+<!--                         <div class="col-md-6 mb-3">
                             <label>Approval</label>
                             <input type="text" class="form-control"
                                    value="<?= ($admin['is_approved'] ?? false) ? 'Approved' : 'Pending'; ?>" disabled>
-                        </div>
+                        </div> -->
 
                     </div>
                 </div>

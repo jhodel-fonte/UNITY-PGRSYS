@@ -1,9 +1,17 @@
 <?php
 // process_report.php
 
-
 include_once __DIR__ . '../../database/reports.php';
 include_once __DIR__ . '../../database/images.php';
+include_once __DIR__ . '../../api/googleVision/sendAPI.php';
+// include_once __DIR__ . '../../utils/imageHandler.php';
+
+function imagetoBase64(string $filePath): string|false {
+    if (!file_exists($filePath)) {
+        return false;
+    }
+    return base64_encode(file_get_contents($filePath));
+}
 
 header('Content-Type: application/json');
 
@@ -47,17 +55,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         
+        // Step 1: Insert basic report data.
         $report_id = createReport($dataArray); 
         
         if ($report_id && $report_id !== false) {
-            
+        
             if (!empty($_FILES['report_images']['name'][0])) {
                 
-                $full_upload_dir = __DIR__ . '../../../uploads/reports/'; 
+                
+                $relative_upload_path_db = '../../uploads/reports/'; 
+                $full_upload_dir_fs = __DIR__ . '../../../uploads/reports/'; 
 
-                // FIX 2: Ensure the directory exists and is writable (check once)
-                if (!is_dir($full_upload_dir)) {
-                    if (!mkdir($full_upload_dir, 0777, true)) {
+                if (!is_dir($full_upload_dir_fs)) {
+                    if (!mkdir($full_upload_dir_fs, 0777, true)) {
                         throw new Exception("Failed to create upload directory.");
                     }
                 }
@@ -72,29 +82,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $file_error = $_FILES['report_images']['error'][$key];
                     $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
 
-                    // Validation checks: file size, error, and extension
-                    if ($file_error !== UPLOAD_ERR_OK) {
-                        error_log("Upload error for {$file_name}: Code {$file_error}");
+                    // Validation checks
+                    if ($file_error !== UPLOAD_ERR_OK || $file_size > $max_file_size || !in_array($file_ext, $allowed_extensions)) {
+                        error_log("Skipping invalid or oversized file: " . $file_name);
                         continue; 
-                    }
-
-                    if ($file_size > $max_file_size) {
-                        error_log("Oversized file ignored: " . $file_name);
-                        continue; 
-                    }
-                    
-                    if (!in_array($file_ext, $allowed_extensions)) {
-                        error_log("Invalid file type ignored: " . $file_name);
-                        continue;
                     }
                     
                     $unique_file_name = $report_id . '_' . time() . '_' . uniqid() . '.' . $file_ext;
                     
+                    $file_path_fs = $full_upload_dir_fs . $unique_file_name;
                     
-                    $file_path = $full_upload_dir . $unique_file_name;
-                    
-                    if (move_uploaded_file($tmp_name, $file_path)) {
-                        insert_report_image_path($report_id, $unique_file_name);
+                    if (move_uploaded_file($tmp_name, $file_path_fs)) {
+                        //  to database
+                        insert_report_image_path($report_id, $unique_file_name); 
+
+                        $imagePath = "C:/xampp/htdocs/UNTY-PGRSYS/uploads/reports/" . $unique_file_name;
                     } else {
                         error_log("File move failed for: " . $file_name);
                     }
@@ -102,8 +104,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
             }
             
+            //postimage
+            // $image = $_FILES['report_images']['tmp_name'];
+            // var_dump($image);
             $response['success'] = true;
             $response['message'] = 'Your report has been successfully submitted and is under review.';
+            
+            try {  
+                $imageBase64 = imagetoBase64($imagePath);
+                $mlResults = googleVisionApi($imageBase64);
+                updateReportMLData($mlResults, $report_id);
+                
+            } catch (Throwable $e) {
+                error_log("ML processing failed for report ID {$report_id}: " . $e->getMessage());
+            }
+
             
         } else {
             $response['message'] = 'Database insertion failed during report creation.';

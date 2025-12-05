@@ -1,60 +1,38 @@
 <?php
 session_start();
 
-// DEMO REPORTS
-$reports = [
-    [
-        "id" => 1,
-        "user_id" => 1,
-        "status" => "Pending",
-        "lat" => 13.87942,
-        "lng" => 121.21598
-    ],
-    [
-        "id" => 2,
-        "user_id" => 1,
-        "status" => "Resolved",
-        "lat" => 13.87890,
-        "lng" => 121.21711
-    ],
-    [
-        "id" => 3,
-        "user_id" => 1,
-        "status" => "Pending",
-        "lat" => 13.87985,
-        "lng" => 121.21470
-    ],
-    [
-        "id" => 4,
-        "user_id" => 1,
-        "status" => "Resolved",
-        "lat" => 13.88020,
-        "lng" => 121.21640
-    ],
-    [
-        "id" => 4,
-        "user_id" => 1,
-        "status" => "Resolved",
-        "lat" => 13.88020,
-        "lng" => 121.21640
-        ],
-    [
-        "id" => 4,
-        "user_id" => 1,
-        "status" => "Resolved",
-        "lat" => 13.88020,
-        "lng" => 121.21640
-    ]
-];
+// require_once __DIR__ . '/../app/utils/log.php';
+require_once __DIR__ . '../../../app/api/data/dataProcess.php'; 
 
+$user = (isset($_SESSION['userLoginData'])) ? $_SESSION['userLoginData']['data'] : null;
+
+if (!$user || !isset($user['pgCode'])) {
+    die("Error: User session data is missing.");
+}
+
+
+
+$pgCode = $user['pgCode'];
+var_dump($pgCode);
+$data_source_url = "http://localhost/UNTY-PGRSYS/app/api/data/getData.php?data=reportbyId&id=" .$pgCode ;
+
+// Fetch the data from the API
+$reports = [];
+$reports = getDataSource($data_source_url);
+
+
+
+// Initialize counters
 $total = 0;
 $pending = 0;
 $resolved = 0;
 
+// Loop through the CORRECT reports variable
 foreach ($reports as $r) {
     $total++;
-    if ($r["status"] === "Pending") $pending++;
-    if ($r["status"] === "Resolved") $resolved++;
+    // Status is case-sensitive, ensure matching the JSON structure
+    if (isset($r["status"]) && $r["status"] === "Pending") $pending++;
+    if (isset($r["status"]) && $r["status"] === "Resolved") $resolved++;
 }
 ?>
 <!DOCTYPE html>
@@ -78,7 +56,6 @@ foreach ($reports as $r) {
 
         <h2 class="text-center dashboard-title">Dashboard Overview</h2>
 
-        <!-- TOP CARDS -->
         <div class="row g-4 mb-4 mt-2 justify-content-center">
 
             <div class="col-md-3">
@@ -103,8 +80,7 @@ foreach ($reports as $r) {
             </div>
         </div>
 
-        <!-- Map Section -->
-<div class="map-section mt-4">
+        <div class="map-section mt-4">
     <h3 class="text-center mb-3">Report Map</h3>
 
     <div id="userMap"></div>
@@ -112,7 +88,6 @@ foreach ($reports as $r) {
 
 
 
-<!-- 🔵 MIDDLE ROW — RECENT REPORTS TABLE (NOW SCROLLABLE) -->
 <div class="recent-reports p-4 rounded shadow-sm scroll-card mb-4">
     <h3 class="mb-3">Reports</h3>
 
@@ -129,9 +104,9 @@ foreach ($reports as $r) {
             <tbody>
             <?php foreach (array_slice($reports, 0, 10) as $r): ?>
                 <tr>
-                    <td><?= $r["id"]; ?></td>
-                    <td><?= $r["status"]; ?></td>
-                    <td><?= date("M d, Y"); ?></td>
+                    <td><?= htmlspecialchars($r["id"]); ?></td>
+                    <td><?= htmlspecialchars($r["status"]); ?></td>
+                    <td><?= date("M d, Y", strtotime($r["created_at"] ?? '')); ?></td>
                 </tr>
             <?php endforeach; ?>
             </tbody>
@@ -140,10 +115,8 @@ foreach ($reports as $r) {
 </div>
 
 
-<!-- 🔵 BOTTOM ROW -->
 <div class="row mb-5">
 
-    <!-- LEFT — ACTIVITY FEED (NOW SCROLLABLE) -->
     <div class="col-md-6 mb-4">
         <div class="activity-feed p-4 rounded shadow-sm scroll-card">
             <h3 class="mb-3">Activity Feed</h3>
@@ -159,7 +132,6 @@ foreach ($reports as $r) {
         </div>
     </div>
 
-    <!-- RIGHT — STATUS CHART -->
     <div class="col-md-6 mb-4">
         <div class="status-chart p-4 rounded shadow-sm scroll-card">
             <h3 class="mb-3">Report Chart</h3>
@@ -177,7 +149,8 @@ foreach ($reports as $r) {
 </div>
 
 <script>
-    window.demoReports = <?= json_encode($reports); ?>;
+    // FIX: Pass the reports data to the global scope for mapping/charting scripts
+    window.reportsData = <?= json_encode($reports); ?>;
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

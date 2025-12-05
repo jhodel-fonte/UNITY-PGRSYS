@@ -225,7 +225,7 @@ $(document).ready(function() {
     // --- B. AJAX function to fetch users from the server ---
     function fetchAvailableUsers(teamId) {
         $.ajax({
-            url: '../app/api/data/getData.php?data=ResponseTeamUsers',
+            url: '../app/api/data/getData.php?data=members', //ResponseTeamUsers
             method: 'GET',
             data: { team_id: teamId }, // Pass the team ID to the server
             dataType: 'json',

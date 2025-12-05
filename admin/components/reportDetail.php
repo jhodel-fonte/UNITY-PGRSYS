@@ -4,9 +4,7 @@ $imageDir = __DIR__ .'../../../assets/uploads/reports';
 
 if (!isset($reports) || !is_array($reports)) {
     // Assuming dataProcess.php returns the reports array
-    // Note: If this file is executed directly, the include path might need adjustment
-    // For this context, we'll keep the logic as provided.
-    $reports = include __DIR__ . '/../dataProcess.php'; 
+    // $reports = include __DIR__ . '/../dataProcess.php'; 
 }
 
 if (!is_array($reports) || (isset($reports['success']) && $reports['success'] === false)) {
@@ -21,6 +19,10 @@ foreach ($reports as $report):
     $location = htmlspecialchars($report['location'] ?? 'Location not specified.');
     $userFullName = htmlspecialchars(($report['firstName'] ?? '') . ' ' . ($report['lastName'] ?? ''));
     $userId = htmlspecialchars($report['user_id'] ?? 'N/A');
+    
+    // Determine the legitimacy status from the ML data
+    $legitStatus = htmlspecialchars($report['legit_status'] ?? 'N/A');
+    
     $status = htmlspecialchars($report['status'] ?? 'Unknown');
     $createdAt = $report['created_at'] ?? null;
     if ($createdAt && strpos($createdAt, 'T') !== false) {
@@ -35,16 +37,13 @@ foreach ($reports as $report):
 
 <div class="modal fade" id="reportModal<?= $reportId ?>" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-        <!-- Light Theme: modal-content default background is white/light -->
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title text-primary">Report Details</h5>
-                <!-- Default close button is fine for light theme -->
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="row mb-4">
-                    <!-- General Info Card -->
                     <div class="col-md-6 border-end">
                         <h6 class="text-primary mb-3">Report Information</h6>
                         <dl class="row mb-0 small">
@@ -70,7 +69,6 @@ foreach ($reports as $report):
                         </dl>
                     </div>
 
-                    <!-- Submission Info Card -->
                     <div class="col-md-6">
                         <h6 class="text-primary mb-3">Submission Details</h6>
                         <dl class="row mb-0 small">
@@ -87,19 +85,26 @@ foreach ($reports as $report):
                                 <dt class="col-5 text-muted fw-normal">ML Category:</dt>
                                 <dd class="col-7"><?= htmlspecialchars($report['ml_category']) ?></dd>
                             <?php endif; ?>
+                            
+                            <?php if (!empty($report['legit_status'])): ?>
+                                <dt class="col-5 text-muted fw-normal">Legit Status:</dt>
+                                <dd class="col-7">
+                                    <span class="badge bg-<?= $legitStatus == 'Suspicious' ? 'danger' : ($legitStatus == 'Legit' ? 'success' : 'secondary') ?>">
+                                        <?= $legitStatus ?>
+                                    </span>
+                                </dd>
+                            <?php endif; ?>
                         </dl>
                     </div>
                 </div>
 
                 <hr>
 
-                <!-- Description Section -->
                 <h6 class="text-primary mb-2">Description</h6>
                 <div class="alert alert-light border p-3 mb-4 small">
                     <?= nl2br($description) ?>
                 </div>
 
-                <!-- Location Map Section -->
                 <h6 class="text-primary mb-2">Location: <span class="fw-normal text-secondary small"><?= $location ?></span></h6>
                 <?php if ($lat && $lng): ?>
                     <div class="rounded overflow-hidden mb-4 shadow-sm" style="height: 300px; border: 1px solid #ccc;">
@@ -109,7 +114,7 @@ foreach ($reports as $report):
                             style="border:0;"
                             loading="lazy"
                             allowfullscreen
-                            src="https://www.google.com/maps?q=<?= urlencode($lat) ?>,<?= urlencode($lng) ?>&z=14&output=embed">
+                            src="https://maps.google.com/maps?q=<?= urlencode("{$lat},{$lng}") ?>&z=14&output=embed">
                         </iframe>
                     </div>
                 <?php else: ?>
@@ -119,7 +124,6 @@ foreach ($reports as $report):
                     </div>
                 <?php endif; ?>
 
-                <!-- Images Section -->
                 <h6 class="text-primary mb-3">Report Images</h6>
                 <?php if (!empty($images)): ?>
                     <div class="row g-3">
@@ -129,8 +133,8 @@ foreach ($reports as $report):
                             if (!$imagePath) {
                                 continue;
                             }
-                            // Construct the full path (assuming relative path is correct)
-                            $fullImageUrl = '../assets/uploads/reports/' . htmlspecialchars($imagePath);
+                            // Construct the full path
+                            $fullImageUrl = '../uploads/reports/' . htmlspecialchars($imagePath);
                         ?>
                             <div class="col-4 col-md-3">
                                 <div class="card p-1 shadow-sm h-100">
@@ -139,7 +143,8 @@ foreach ($reports as $report):
                                         style="height: 100px; width: 100%; object-fit: cover; cursor: pointer;"
                                         alt="Report image"
                                         onclick="window.open(this.src, '_blank')"
-                                        onerror="this.style.display='none'; this.closest('.col-4').innerHTML='<div class=&quot;text-center text-danger small p-2&quot;>Image failed to load</div>';">
+                                        onerror="this.style.display='none'; this.closest('.col-4').innerHTML='<div class=\'text-center text-danger small p-2\'>Image failed to load</div>';"
+                                    >
                                 </div>
                             </div>
                         <?php endforeach; ?>
