@@ -35,6 +35,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                  throw new InvalidArgumentException("Missing required fields: " . implode(', ', $missingFields));
             }
 
+            $usernameRegex = '/^[a-zA-Z0-9_]{3,20}$/';
+            if (!preg_match($usernameRegex, $_POST['username'])) {
+                throw new InvalidArgumentException("Username must be 3 to 20 characters long and contain only letters, numbers, or underscores.");
+            }
+
             // input Validation
 
             //email
@@ -43,10 +48,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             
             // Password length check (re-enabled and recommended minimum)
-            // if (strlen($_POST['password']) < 12) {
-            //     throw new InvalidArgumentException("Password must be at least 12 characters long.");
-            // } 
-            //regex
+            if (strlen($_POST['password']) < 8) {
+                throw new InvalidArgumentException("Password must be at least 8 characters long.");
+            } 
+
+
+            //
 
             // Password match check
             if ($_POST['password'] !== $_POST['confirm_password']) {
@@ -83,15 +90,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             $_SESSION['number'] = $userReg['number'];
             $_SESSION['userLoginData'] = getProfileAccountByPGID($set['pgID']);
-            // var_dump($_SESSION['userLoginData']);
-            // exit;
-            // --- 7. OTP and Final Success Response ---
             
+            //send otp 
             if (!sendOtpToNumber($userReg['number'])) {                
                 containlog('WARNING', 'OTP send failed for new user PGID: ' . $set['pgID'], null, 'authLog.log');
             }
             
             containlog('INFO', 'User registered successfully. PGID: ' . $set['pgID'] . ', Username: ' . $userReg['username'], null, 'authLog.log');
+            containlog('ACCOUNT', 'User registered successfully. PGID: ' . $set['pgID'] . ', Username: ' . $userReg['username'] .': Need Admin Approval', null, 'createAccNotif.txt');
             
             
             ob_clean();

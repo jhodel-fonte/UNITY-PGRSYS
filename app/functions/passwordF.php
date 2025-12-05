@@ -1,5 +1,6 @@
 <?php
 
+include_once __DIR__ ."/../utils/common.php";
 function securePassword($pass) {//returns a encrypted password
     $temp = sanitizeInput($pass);
     $saltedPassword = password_hash($temp, PASSWORD_DEFAULT);

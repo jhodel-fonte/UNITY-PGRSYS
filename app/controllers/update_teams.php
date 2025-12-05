@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $success = updateTeam($updatedTeamData); 
 
             if ($success) {
-                // Case 1: Successful update (at least one row changed)
+                // Case 1: Successful update (at least one row changed) 
                 http_response_code(200); // OK
                 $response['success'] = true;
                 $response['message'] = "Response team updated successfully!";

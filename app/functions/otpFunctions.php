@@ -10,7 +10,7 @@ function sendOtpToNumber($number) {
     $res = $handler->sendOtp($number);
     $response = json_decode($res, true);
 
-    containlog('Trace', var_dump($response), __DIR__, 'otpLog.log');//otp logging 
+    containlog('Trace:', $response['data']['message'], __DIR__, 'otpLog.log');//otp logging 
 
     if ($response['status'] == 'success') {//eval the data 
         $_SESSION['otp_sent_time'] = time() + 10;//this is time to limit a resending or refreshing
@@ -33,12 +33,40 @@ function verifyOtpForNumber($number, $otp) {
         $response = ['success' => 'error', 'message' => 'SMS Server Error'];
     }
     
-    // error_log(date('[Y-m-d H:i:s] ') . $res . PHP_EOL, 3, __DIR__ . '../../../log/account.log');
     containlog('Trace', $res, __DIR__, 'otpLog.txt');//otp logging 
     
     if ($response['status'] == 'success' && $response['message'] == 'OTP verified successfully' ) {
             return true;
         }
+    return false;
+}
+
+function verifyOtpForNumber2($number, $otp) {
+    $handler = new smsHandler();
+    $rawResponse = $handler->verifyOtp($number, $otp);
+
+    $response = json_decode($rawResponse, true);
+    containlog('Trace', "iProgSMS Verify Response: " . $rawResponse, __DIR__, 'otpLog.txt');
+    
+    if (!is_array($response) || !isset($response['status'])) {
+        $response = [
+            'status' => 'error',
+            'message' => 'SMS Server Error: Invalid or Malformed Response from iProgSMS.'
+        ];
+        
+        containlog('Error', $response['message'], __DIR__, 'otpFailureLog.txt');
+        return false;
+    }
+    
+    if ($response['status'] === 'success') {
+        return true;
+    }
+    
+    if ($response['status'] !== 'success') {
+        $errorMessage = $response['message'] ?? 'Unknown OTP verification error.';
+        containlog('Warning', "OTP Verification Failed for {$number}. Status: {$response['status']}. Message: {$errorMessage}", __DIR__, 'otpFailureLog.txt');
+    }
+
     return false;
 }
 

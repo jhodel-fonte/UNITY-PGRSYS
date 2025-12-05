@@ -1,14 +1,11 @@
 <?php
 
 session_start();
-// Start output buffering (good practice)
 ob_start();
 
-// Ensure paths are correct, using dirname() to be safer
 require_once dirname(__DIR__) . '/utils/addAllUtil.php';
 require_once dirname(__DIR__) . '/functions/allFunctions.php';
 
-// Set content type for JSON responses
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -17,6 +14,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (empty($_POST['username']) || empty($_POST['password'])) {
             throw new Exception('Username and Password fields cannot be empty.');
         }
+
+        $usernameRegex = '/^[a-zA-Z0-9_]{3,20}$/';
+        if (!preg_match($usernameRegex, $_POST['username'])) {
+            throw new InvalidArgumentException("Username must be 3 to 20 characters long and contain only letters, numbers, or underscores.");
+        }
+
+        if (strlen($_POST['password']) < 8) {
+            // throw new InvalidArgumentException("Password must be at least 8 characters long.");
+        } 
 
         $username = sanitizeInput($_POST['username']);
         $password = sanitizeInput($_POST['password']);
@@ -28,8 +34,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $_SESSION['userLoginData'] = ['success' => true, 'data' => $userProfile];
 
-            // The redirecting.php script will handle OTP checks based on statusId
-            // We just need to confirm the login was successful here.
             if (isset($userProfile['statusId']) && $userProfile['statusId'] == 1) {
                  $_SESSION['isOtpVerified'] = true;
             }
@@ -52,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-// Default response for non-POST requests
+// Default response
 ob_clean();
 $r = ['response' => 'error', 'message' => 'Request method not allowed.'];
 echo json_encode($r);

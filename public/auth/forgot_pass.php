@@ -1,3 +1,14 @@
+<?php
+session_start();
+
+$Otp = '';
+if (isset($_SESSION['secretOtp'] )) {
+    $Otp = $_SESSION['secretOtp'];
+}
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -72,6 +83,18 @@
                             placeholder="••••••••"
                             required>
                     </div>
+                    
+                    <div class="mb-4 text-start">
+                        <label for="confirm_password" class="form-label">Confirm Password</label>
+                        <input 
+                            type="password" 
+                            id="confirm_password"
+                            name="confirm_password" 
+                            class="form-control form-control-lg" 
+                            placeholder="••••••••"
+                            required>
+                    </div>
+                    
 
                     <button type="submit" class="btn w-100 py-2 mb-4">Reset Password</button>
                     <a href="#" class="link text-decoration-none small" id="resend-code-link">Resend Code</a>
@@ -92,5 +115,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="assets/forgot.js"></script>
+    <script>console.log('<?= $Otp ?>')</script>
 </body>
 </html>

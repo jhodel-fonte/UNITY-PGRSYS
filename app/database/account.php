@@ -32,26 +32,43 @@ class UserAcc {
         }
     }
 
-function isUserMobileRegisterd($number) {
-    $number = sanitizeInput($number);
+    function isUserMobileRegisterd($number) {
+        $number = sanitizeInput($number);
 
-    try {
-        if (strlen($number) !== 11) {
-            throw new Exception('Mobile number must be 11 Digit!');
+        try {
+            if (strlen($number) !== 11) {
+                throw new Exception('Mobile number must be 11 Digit!');
+            }
+
+            $query = $this->conn->prepare("SELECT `mobileNum` FROM `account` WHERE `mobileNum` = ?");
+            $query->execute([$number]);
+            
+            $result = $query->fetch();
+
+            return $result !== false;
+
+        } catch (PDOException $e) {
+            containlog("INFO", "Database Error in isUserMobileRegisterd:" .$e->getMessage(), null, 'database.log');
+            return false; 
         }
-
-        $query = $this->conn->prepare("SELECT `mobileNum` FROM `account` WHERE `mobileNum` = ?");
-        $query->execute([$number]);
-        
-        $result = $query->fetch();
-
-        return $result !== false;
-
-    } catch (PDOException $e) {
-        containlog("INFO", "Database Error in isUserMobileRegisterd:" .$e->getMessage(), null, 'database.log');
-        return false; 
     }
-}
+
+    function updatePassByNumber($number, $newPassword) {
+        $number = sanitizeInput($number);
+        $pass = sanitizeInput($newPassword);
+
+        $hashedPassword = password_hash($pass, PASSWORD_DEFAULT);
+
+        try {
+            $query = $this->conn->prepare("UPDATE `account` SET `saltedPass` = ? WHERE `mobileNum` = ?");
+            $success = $query->execute([$hashedPassword, $number]);
+            return $success && $query->rowCount() > 0;
+
+        } catch (PDOException $e) {
+            containlog("INFO", "Database Error in updatePassByNumber: " .$e->getMessage(), null, 'database.log');
+            return false; 
+        }
+    }
 
     function isUsernameRegistered($uname) {
         $uname = sanitizeInput($uname);

@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', () => {
     // DOM Elements
     const mobileForm = document.getElementById('mobile-form');
     const otpForm = document.getElementById('otp-form');

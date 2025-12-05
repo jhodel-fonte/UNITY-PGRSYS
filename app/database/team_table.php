@@ -121,12 +121,12 @@ function updateTeam(array $data): bool {
     WHERE team_id = ?";
     
     $values = [
-        $data['name'] ?? null,
-        $data['contact_number'] ?? null,
+        sanitizeInput($data['name'] ?? ''),
+        sanitizeInput($data['contact_number'] ?? ''),
         $data['is_active'] ?? 0,
-        $data['email'] ?? null,
-        $data['address'] ?? null,
-        $data['classification'] ?? null,
+        sanitizeInput($data['email'] ?? ''),
+        sanitizeInput($data['address'] ?? ''),
+        sanitizeInput($data['classification'] ?? ''),
         $teamId
     ];
 
