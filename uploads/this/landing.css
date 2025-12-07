@@ -1,111 +1,193 @@
-/* GENERAL */
-body {
-    font-family: 'Inter', sans-serif;
-    background: #f4f6f9;
+/* ============================
+GLOBAL
+============================ */
+html, body {
+    margin: 0;
+    padding: 0;
+    scroll-behavior: smooth;
+    font-family: "Segoe UI", sans-serif;
 }
 
 .section-padding {
-    padding: 80px 0;
+    padding: 100px 0;
 }
 
 .section-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #222;
-    margin-bottom: 20px;
+    font-size: 2.6rem;
+    font-weight: 800;
+    margin-bottom: 25px;
 }
 
-.text-shadow {
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
-}
-
-/* NAVBAR */
+/* ============================
+NAVBAR
+============================ */
 .custom-navbar {
-    background: #1a1a2e !important;
+    background: #0d0d0d;
+    padding: 12px 0;
 }
 
-/* Home SECTION */
-.hhome-section {
-    margin-top: 56px;
+.nav-link.active {
+    color: #eaf6fb !important;
+    font-weight: bold;
+}
+
+/* Prevent content being hidden */
+body {
+    padding-top: 65px;
+}
+
+/* ============================
+CAROUSEL
+============================ */
+.home-section {
+    margin-top: -65px;
+}
+
+.carousel-item {
+    height: 100vh;
 }
 
 .carousel-img {
     width: 100%;
-    height: 80vh;
+    height: 100vh;
     object-fit: cover;
-    filter: brightness(70%);
 }
 
-/* ABOUT */
+.carousel-caption {
+    bottom: 35%;
+}
+
+.text-shadow {
+    text-shadow: 0px 3px 10px rgba(0,0,0,0.9);
+}
+
+/* ============================
+ABOUT TEXT
+============================ */
 .about-text {
-    max-width: 800px;
+    max-width: 900px;
+    line-height: 1.7;
 }
 
-.note-text {
-    font-size: 1.1rem;
-    color: #444;
+.about{
+    background: linear-gradient(135deg, #d8eaed, #f1cfcf);
 }
 
-/* SERVICE CARDS */
+
+/* ============================
+SERVICE CARDS (FLIP EFFECT)
+============================ */
+.service{
+    background: linear-gradient(120deg, hsl(241, 57%, 80%), #c6f3fa);
+}
 .service-card {
-    background: white;
-    border-radius: 12px;
-    padding: 25px;
-    text-align: center;
-    border: 1px solid #ddd;
-    transition: 0.3s;
-}
-.service-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-}
-.service-icon {
-    font-size: 40px;
-    color: #1a1a2e;
-    margin-bottom: 15px;
+    perspective: 1000px;
+    height: 260px;
+    position: relative;
 }
 
-/* HOW IT WORKS */
+.service-card > div {
+    height: 100%;
+    width: 100%;
+    transition: transform 0.7s ease;
+    transform-style: preserve-3d;
+    position: relative;
+}
+
+.service-card:hover > div {
+    transform: rotateY(180deg);
+}
+
+.service-card-front,
+.service-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding: 25px;
+    border-radius: 15px;
+    backface-visibility: hidden;
+    box-shadow: 0 10px 18px rgba(0,0,0,0.12);
+}
+
+.service-card-front {
+    background: #ffffff;
+}
+
+.service-card-back {
+    background: #1b2741;
+    color: white;
+    transform: rotateY(180deg);
+}
+
+.service-icon {
+    font-size: 3rem;
+}
+
+/* ============================
+HOW IT WORKS
+============================ */
+#how{
+    background: linear-gradient(135deg, #a0b5e1, #b09de9);
+}
 .how-card {
     background: white;
     padding: 25px;
-    border-radius: 12px;
-    border: 1px solid #ddd;
-    transition: 0.3s;
-}
-.how-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-}
-.how-number {
-    font-size: 40px;
-    font-weight: 800;
-    color: #1a1a2e;
-    display: block;
-    margin-bottom: 10px;
+    height: 260px;
+    border-radius: 15px;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.1);
 }
 
-/* CONTACT FORM */
+.how-number {
+    font-size: 3rem;
+    font-weight: 900;
+    color: #0d6efd;
+}
+
+/* ============================
+CONTACT FORM
+============================ */
+
+#contact {
+    background: linear-gradient(135deg, #f0e6ff, #ffd9f0);
+}
+
 .contact-form {
-    background: white;
-    border: 1px solid #ddd;
+    background: #ffffff;
+    border-radius: 15px;
 }
 
 .contact-form input,
 .contact-form textarea {
-    border-radius: 8px;
+    border-radius: 10px;
 }
 
-.btn-primary {
-    background: #1a1a2e;
-    border: none;
-}
-
-.btn-primary:hover {
-    background: #0d0d18;
-}
-
-/* FOOTER */
+/* ============================
+FOOTER
+============================ */
 .footer-bg {
-    background: #1a1a2e;
+    background: #0d0d0d;
+    color: white;
+}
+
+/* ============================
+FULL-SCREEN SECTIONS (NO HTML CHANGE)
+============================ */
+#about,
+#services,
+#how,
+#contact {
+    min-height: 100vh;               /* Full screen */
+    display: flex;                   /* Vertical alignment */
+    align-items: center;             /* Center content vertically */
+    padding-top: 120px !important;   /* Space for navbar */
+    padding-bottom: 120px !important;
+}
+
+/* Make containers centered properly */
+#about .container,
+#services .container,
+#how .container,
+#contact .container {
+    margin-top: auto;
+    margin-bottom: auto;
 }

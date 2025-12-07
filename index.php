@@ -24,9 +24,8 @@ $collectedValues = [];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UNITY PGSRS - Padre Garcia Service Report System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="uploads/this/landing.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
 
@@ -42,25 +41,11 @@ $collectedValues = [];
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
 
-                <li class="nav-item">
-                    <a class="nav-link" href="#home">Home</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="#about">About</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="#services">Report Categories</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="#how">How it works</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="#contact">Contact</a>
-                </li>
+                <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                <li class="nav-item"><a class="nav-link" href="#services">Report Categories</a></li>
+                <li class="nav-item"><a class="nav-link" href="#how">How it works</a></li>
+                <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Portal</a>
@@ -75,7 +60,7 @@ $collectedValues = [];
     </div>
 </nav>
 
-<!-- Home SECTION -->
+<!-- HOME SECTION -->
 <section id="home" class="home-section">
     <div id="homeCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
@@ -116,9 +101,8 @@ $collectedValues = [];
     </div>
 </section>
 
-
 <!-- ABOUT SECTION -->
-<section id="about" class="section-padding bg-light">
+<section id="about" class="about section-padding">
     <div class="container">
         <h2 class="section-title text-center">About UNITY PGSRS</h2>
 
@@ -131,7 +115,7 @@ $collectedValues = [];
 </section>
 
 <!-- SERVICES SECTION -->
-<section id="services" class="section-padding bg-white">
+<section id="services" class="service section-padding">
     <div class="container">
         <h2 class="section-title text-center">Report Categories</h2>
 
@@ -141,60 +125,103 @@ $collectedValues = [];
 
         <div class="row g-4 mt-4">
 
-            <div class="col-md-4">
-                <div class="service-card">
-                    <i class="bi bi-heart-pulse service-icon text-danger"></i>
-                    <h5>Medical</h5>
-                    <p>Emergency medical concerns, injuries, accidents, or health-related incidents.</p>
-                </div>
+            <!-- MEDICAL -->
+<div class="col-md-4">
+    <div class="service-card">
+        <div>
+            <div class="service-card-front d-flex flex-column justify-content-center text-center">
+                <i class="bi bi-heart-pulse service-icon text-danger"></i>
+                <h5 class="mt-2">Medical</h5>
             </div>
+            <div class="service-card-back d-flex flex-column justify-content-center text-center">
+                <p>Emergency medical concerns, injuries, accidents, or health-related incidents.</p>
+            </div>
+        </div>
+    </div>
+</div>
 
-            <div class="col-md-4">
-                <div class="service-card">
-                    <i class="bi bi-fire service-icon text-danger"></i>
-                    <h5>Fire Rescue</h5>
-                    <p>Fire incidents, smoke reports, and requests for fire response.</p>
-                </div>
+<!-- FIRE RESCUE -->
+<div class="col-md-4">
+    <div class="service-card">
+        <div>
+            <div class="service-card-front d-flex flex-column justify-content-center text-center">
+                <i class="bi bi-fire service-icon text-danger"></i>
+                <h5 class="mt-2">Fire Rescue</h5>
             </div>
+            <div class="service-card-back d-flex flex-column justify-content-center text-center">
+                <p>Fire incidents, smoke reports, and requests for immediate fire response.</p>
+            </div>
+        </div>
+    </div>
+</div>
 
-            <div class="col-md-4">
-                <div class="service-card">
-                    <i class="bi bi-life-preserver service-icon text-primary"></i>
-                    <h5>Search and Rescue</h5>
-                    <p>Missing persons, flood rescue, trapped individuals, and emergency retrieval.</p>
-                </div>
+<!-- SEARCH & RESCUE -->
+<div class="col-md-4">
+    <div class="service-card">
+        <div>
+            <div class="service-card-front d-flex flex-column justify-content-center text-center">
+                <i class="bi bi-life-preserver service-icon text-primary"></i>
+                <h5 class="mt-2">Search & Rescue</h5>
             </div>
+            <div class="service-card-back d-flex flex-column justify-content-center text-center">
+                <p>Missing persons, flood rescue, trapped individuals, and emergency retrieval.</p>
+            </div>
+        </div>
+    </div>
+</div>
 
-            <div class="col-md-4">
-                <div class="service-card">
-                    <i class="bi bi-truck service-icon text-warning"></i>
-                    <h5>Logistics</h5>
-                    <p>Transportation assistance, equipment needs, or supply movement requests.</p>
-                </div>
+<!-- LOGISTICS -->
+<div class="col-md-4">
+    <div class="service-card">
+        <div>
+            <div class="service-card-front d-flex flex-column justify-content-center text-center">
+                <i class="bi bi-truck service-icon text-warning"></i>
+                <h5 class="mt-2">Logistics</h5>
             </div>
+            <div class="service-card-back d-flex flex-column justify-content-center text-center">
+                <p>Transportation assistance, equipment needs, or supply movement requests.</p>
+            </div>
+        </div>
+    </div>
+</div>
 
-            <div class="col-md-4">
-                <div class="service-card">
-                    <i class="bi bi-gear service-icon text-info"></i>
-                    <h5>Technical Support</h5>
-                    <p>System issues, technical malfunctions, or LGU system support requests.</p>
-                </div>
+<!-- TECHNICAL SUPPORT -->
+<div class="col-md-4">
+    <div class="service-card">
+        <div>
+            <div class="service-card-front d-flex flex-column justify-content-center text-center">
+                <i class="bi bi-gear service-icon text-info"></i>
+                <h5 class="mt-2">Technical Support</h5>
             </div>
+            <div class="service-card-back d-flex flex-column justify-content-center text-center">
+                <p>System issues, technical malfunctions, or LGU system support requests.</p>
+            </div>
+        </div>
+    </div>
+</div>
 
-            <div class="col-md-4">
-                <div class="service-card">
-                    <i class="bi bi-three-dots service-icon text-secondary"></i>
-                    <h5>Other</h5>
-                    <p>Reports that do not fall under the main categories but still require LGU attention.</p>
-                </div>
+<!-- OTHER -->
+<div class="col-md-4">
+    <div class="service-card">
+        <div>
+            <div class="service-card-front d-flex flex-column justify-content-center text-center">
+                <i class="bi bi-three-dots service-icon text-secondary"></i>
+                <h5 class="mt-2">Other</h5>
             </div>
+            <div class="service-card-back d-flex flex-column justify-content-center text-center">
+                <p>Reports that do not fall under the main categories but still require LGU attention.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
 
         </div>
     </div>
 </section>
 
-<!-- HOW IT WORKS SECTION -->
-<section id="how" class="section-padding bg-light">
+<!-- HOW IT WORKS -->
+<section id="how" class="section-padding">
     <div class="container">
         <h2 class="section-title text-center">How It Works</h2>
 
@@ -236,7 +263,7 @@ $collectedValues = [];
     </div>
 </section>
 
-<!-- CONTACT SECTION -->
+<!-- CONTACT -->
 <section id="contact" class="section-padding">
     <div class="container">
         <h2 class="section-title text-center">Contact Us</h2>
@@ -268,12 +295,12 @@ $collectedValues = [];
     </div>
 </section>
 
-
 <!-- FOOTER -->
 <footer class="footer-bg text-white text-center py-3">
     <p class="mb-0">© 2025 UNITY PGSRS • Padre Garcia Service Report System</p>
 </footer>
 
+<!-- ACTIVE NAV SCROLL -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -284,7 +311,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let scrollPos = window.scrollY + 150;
 
         sections.forEach((section) => {
-            if (section.offsetTop <= scrollPos && 
+            if (section.offsetTop <= scrollPos &&
                 section.offsetTop + section.offsetHeight > scrollPos) {
 
                 navLinks.forEach((link) => link.classList.remove("active"));
@@ -300,9 +327,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-
-
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
