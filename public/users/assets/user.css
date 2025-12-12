@@ -568,7 +568,6 @@ body {
     }
 }
 
-/* design for reports page */
 /* Main container spacing */
 .user-main {
     margin-top: 80px;
@@ -685,7 +684,7 @@ body {
 
 /* Makes the list scrollable */
 .scrollable-table {
-    max-height: 470px;   
+    max-height: 700px;   
     overflow-y: auto;
     padding-right: 5px;
 }

@@ -82,7 +82,7 @@ foreach ($reports as $report):
                             <dd class="col-7"><?= $createdAt ?></dd>
                             
                             <?php if (!empty($report['ml_category'])): ?>
-                                <dt class="col-5 text-muted fw-normal">ML Category:</dt>
+                                <dt class="col-5 text-muted fw-normal">AI Evaluation</dt>
                                 <dd class="col-7"><?= htmlspecialchars($report['ml_category']) ?></dd>
                             <?php endif; ?>
                             

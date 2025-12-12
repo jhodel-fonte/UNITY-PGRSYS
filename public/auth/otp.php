@@ -1,6 +1,10 @@
 <?php
 session_start();
+
+if (isset($_SESSION["secretOtp"])) {
 $otpSecret = $_SESSION['secretOtp'] ."Remove This One in deployment";
+}
+
 require_once __DIR__ .'../../../app/database/profiling.php';
 
 

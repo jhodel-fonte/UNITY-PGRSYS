@@ -2,8 +2,9 @@
 // Note: Assuming 'containlog' function is defined in utils/log.php and available here.
 ob_start();
 include_once __DIR__ .'../../utils/log.php';
+include __DIR__ .'../../../config/dbConfig.php';
 
-class Database { // Database Connection
+class Database  { // Database Connection
 
     // --- Primary (Aiven) Credentials ---
     private $servername = "mysql-f33c54e-fontejoedel1-8150.k.aivencloud.com";
@@ -47,7 +48,7 @@ class Database { // Database Connection
             
         } catch (PDOException $primary_error) {
             containlog('Database', 'Primary (Aiven) connection failed. Attempting backup: ' . $primary_error->getMessage(), __DIR__, 'database.log');
-            echo "<script>Primary (Aiven) connection failed. Attempting backup: " .$primary_error->getMessage() ."</script>";
+            // echo "<script>Primary (Aiven) connection failed. Attempting backup: " .$primary_error->getMessage() ."</script>";
             // --- Attempt 2: Backup (Localhost) Connection ---
             try {
                 $dsn_backup = "mysql:host={$this->backup_servername};"

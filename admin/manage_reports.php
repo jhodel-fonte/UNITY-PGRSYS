@@ -32,39 +32,13 @@ $statuses = ['All','Pending','Approved','Ongoing','Resolved'];
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="../admin/assets/admin.css"> 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<style>
-    /* Custom styles for better table appearance */
-    .table-reports tbody tr {
-        cursor: pointer;
-        transition: background-color 0.15s ease-in-out;
-    }
-    .table-reports tbody tr:hover {
-        background-color: #f0f8ff; /* Light blue on hover for better UX */
-    }
-    /* Ensure the search bar takes full width of its container */
-    #reportSearch {
-        width: 100%;
-        max-width: 500px; 
-        padding: 0.75rem 1rem;
-        border-radius: 0.5rem;
-        border: 1px solid #ced4da;
-        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    }
-    .scroll-card {
-        max-height: 70vh; /* Limit height for better scrolling experience */
-        overflow-y: auto;
-        border-radius: 0.5rem;
-        border: 1px solid #dee2e6;
-        padding: 0;
-    }
-</style>
 </head>
 <body>
 
 <?php include '../admin/admin_sidebar.php'; ?>
 <div class="main-content">
     <div class="container mt-4">
-        <div class="card shadow-lg border-0 p-4">
+        <div class="card-custom p-4">
             <h3 class="mb-4 text-primary">
                 <i class="fas fa-list-alt me-2"></i> Manage Reports
             </h3>
@@ -86,7 +60,6 @@ $statuses = ['All','Pending','Approved','Ongoing','Resolved'];
 
             <div class="mb-4 d-flex justify-content-end">
                 <div class="input-group" style="max-width: 400px;">
-                    <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
                     <input type="text" id="reportSearch" class="form-control border-start-0" placeholder="Search by user, title, or category...">
                 </div>
             </div>
@@ -108,9 +81,9 @@ $statuses = ['All','Pending','Approved','Ongoing','Resolved'];
                     No reports have been submitted yet.
                 </div>
             <?php else: ?>
-                <div class="scroll-card">
-                    <table class="table table-striped table-hover table-reports align-middle mb-0">
-                        <thead class="table-primary sticky-top shadow-sm">
+                <div class="table-responsive scroll-card">
+                    <table class="table table-white table-hover text-center align-middle">
+                        <thead>
                             <tr>
                                 <th class="text-center" style="width: 5%;">#</th>
                                 <th style="width: 15%;">User</th> <th style="width: 25%;">Title</th>

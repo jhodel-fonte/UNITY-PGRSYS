@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// require_once __DIR__ . '/../app/utils/log.php';
 require_once __DIR__ . '../../../app/api/data/dataProcess.php'; 
 
 $user = (isset($_SESSION['userLoginData'])) ? $_SESSION['userLoginData']['data'] : null;
@@ -10,27 +9,18 @@ if (!$user || !isset($user['pgCode'])) {
     die("Error: User session data is missing.");
 }
 
-
-
 $pgCode = $user['pgCode'];
-var_dump($pgCode);
 $data_source_url = "http://localhost/UNTY-PGRSYS/app/api/data/getData.php?data=reportbyId&id=" .$pgCode ;
 
-// Fetch the data from the API
 $reports = [];
 $reports = getDataSource($data_source_url);
 
-
-
-// Initialize counters
 $total = 0;
 $pending = 0;
 $resolved = 0;
 
-// Loop through the CORRECT reports variable
 foreach ($reports as $r) {
     $total++;
-    // Status is case-sensitive, ensure matching the JSON structure
     if (isset($r["status"]) && $r["status"] === "Pending") $pending++;
     if (isset($r["status"]) && $r["status"] === "Resolved") $resolved++;
 }

@@ -62,7 +62,7 @@ $currRole = (
             <img src="../uploads/<?= $profileImage ?>" class="profile-img" onclick="toggleProfileMenu()">
             <div class="profile-dropdown" id="profileDropdown">
                 <a href="../users/myprofile.php"><i class="fa-solid fa-user me-2"></i> My Profile</a>
-                <a href="../app/controllers/logout.php?logout=1"><i class="fa-solid fa-right-from-bracket me-2"></i> Logout</a>
+                <a href="../../app/controllers/logout.php?logout=1"><i class="fa-solid fa-right-from-bracket me-2"></i> Logout</a>
             </div>
         </div>
     </div>

@@ -77,7 +77,7 @@ if ($directoryName !== $currRole) {
     <a href="dashboard.php" class="<?php echo ($currentPage === 'dashboard.php') ? 'active' : ''; ?>"><i class="fa-solid fa-gauge me-2"></i> Dashboard</a>
     <a href="report.php" class="<?php echo ($currentPage === 'report.php') ? 'active' : ''; ?>"><i class="fa-solid fa-file-circle-plus me-2"></i> Create Report</a>
     <a href="view.php" class="<?php echo ($currentPage === 'view.php') ? 'active' : ''; ?>"><i class="fa-solid fa-file-lines me-2"></i>View My Report</a>
-    <a href="status.php" class="<?php echo ($currentPage === 'status.php') ? 'active' : ''; ?>"><i class="fa-solid fa-bars-progress me-2"></i> Report Status</a>
+    <!-- <a href="status.php" class="<?php echo ($currentPage === 'status.php') ? 'active' : ''; ?>"><i class="fa-solid fa-bars-progress me-2"></i> Report Status</a> -->
     
 </div>
 

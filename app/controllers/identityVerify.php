@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         if (strlen($_POST['password']) < 8) {
-            // throw new InvalidArgumentException("Password must be at least 8 characters long.");
+            throw new InvalidArgumentException("Password must be at least 8 characters long.");
         } 
 
         $username = sanitizeInput($_POST['username']);

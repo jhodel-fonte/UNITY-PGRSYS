@@ -4,6 +4,24 @@ ob_start();
 
 header('Content-Type: application/json');
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+};
+
+$adminCurrentUser = (isset($_SESSION['userLoginData'])) ? $_SESSION['userLoginData']['data']['pgCode'] : null;
+
+if ($adminCurrentUser == null) {
+    $response = [
+        'success' => false,
+        'message' => 'Access Denied!'
+    ];
+    ob_clean();
+    echo json_encode($response, JSON_PRETTY_PRINT);
+    exit();
+}
+
+
+
 require_once __DIR__ . '/../../database/databaseFunctions.php';
 
 require_once __DIR__ . '../../../database/reports.php';
@@ -188,7 +206,7 @@ try {
             }
 
             $response = [
-                'success' => true,
+                // 'success' => true,
                 'data' => $members
             ];
 

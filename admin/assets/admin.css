@@ -79,14 +79,13 @@ body {
     transition: 0.3s ease;
 }
 
-/* FIX: Change to relative positioning to flow correctly */
 .card-custom{
-    position: relative; /* Changed from fixed */
+    position: relative;
     top: auto;              
     left: auto;            
     right: auto;
     bottom: auto;
-    margin-top: 50px; /* Space below the topbar */
+    margin-top: 50px;
     margin-bottom: 20px;
 
     padding: 20px;
