@@ -74,32 +74,111 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     // DASHBOARD CHART
-    const chartCanvas = document.getElementById("monthlyChart");
-    if (chartCanvas && typeof Chart !== "undefined") {
-        new Chart(chartCanvas, {
-            type: "bar",
-            data: {
-                labels: typeof chartMonths !== 'undefined' ? chartMonths : [],
-                datasets: [{
-                    label: "Reports Submitted",
-                    data: typeof chartTotals !== 'undefined' ? chartTotals : [],
-                    backgroundColor: "rgba(64, 0, 255, 0.5)",
-                    borderColor: "#1900ffff",
-                    borderWidth: 1,
-                    borderRadius: 5
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: { beginAtZero: true },
-                    x: { ticks: { color: "#0800ffff" } }
-                }
+const chartCanvas = document.getElementById("monthlyChart");
+let monthlyChart = null;
+
+if (chartCanvas && typeof Chart !== "undefined") {
+    monthlyChart = new Chart(chartCanvas, {
+        type: "bar",
+        data: {
+            labels: typeof chartMonths !== 'undefined' ? chartMonths : [],
+            datasets: [{
+                label: "Reports Submitted",
+                data: typeof chartTotals !== 'undefined' ? chartTotals : [],
+                backgroundColor: "rgba(64, 0, 255, 0.5)",
+                borderColor: "#1900ffff",
+                borderWidth: 1,
+                borderRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true },
+                x: { ticks: { color: "#0800ffff" } }
             }
-        });
+        }
+    });
+}
+
+/* =====================================================
+      MONTHLY REPORT FILTER (NEW CODE)
+===================================================== */
+
+let originalLabels = typeof chartMonths !== "undefined" ? [...chartMonths] : [];
+let originalTotals = typeof chartTotals !== "undefined" ? [...chartTotals] : [];
+
+const filterSelect = document.getElementById("reportFilter");
+const monthPicker = document.getElementById("monthPicker");
+
+// RUN ONLY IF FILTER ELEMENT EXISTS
+if (filterSelect) {
+
+    filterSelect.addEventListener("change", () => {
+        const val = filterSelect.value;
+
+        if (val === "month") {
+            monthPicker.style.display = "block";
+            return;
+        } else {
+            monthPicker.style.display = "none";
+        }
+
+        applyFilter(val);
+    });
+
+    monthPicker.addEventListener("change", () => {
+        applyMonth(monthPicker.value);
+    });
+}
+
+function applyFilter(days) {
+    if (!monthlyChart) return;
+
+    if (days === "all") {
+        updateChart(originalLabels, originalTotals);
+        return;
     }
+
+    const limit = new Date();
+    limit.setDate(limit.getDate() - parseInt(days));
+
+    const filteredLabels = [];
+    const filteredTotals = [];
+
+    originalLabels.forEach((label, index) => {
+        const d = new Date(label);
+        if (d >= limit) {
+            filteredLabels.push(label);
+            filteredTotals.push(originalTotals[index]);
+        }
+    });
+
+    updateChart(filteredLabels, filteredTotals);
+}
+
+function applyMonth(monthInput) {
+    const filteredLabels = [];
+    const filteredTotals = [];
+
+    originalLabels.forEach((label, index) => {
+        if (label.substring(0, 7) === monthInput) {
+            filteredLabels.push(label);
+            filteredTotals.push(originalTotals[index]);
+        }
+    });
+
+    updateChart(filteredLabels, filteredTotals);
+}
+
+function updateChart(labels, totals) {
+    monthlyChart.data.labels = labels.length ? labels : ["No Data"];
+    monthlyChart.data.datasets[0].data = totals.length ? totals : [0];
+    monthlyChart.update();
+}
+
 
     // COUNTER ANIMATION
     const counters = document.querySelectorAll(".count");
