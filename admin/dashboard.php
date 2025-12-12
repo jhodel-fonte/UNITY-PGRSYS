@@ -19,7 +19,7 @@ $recentApprovedReports = [];
 
 if (!is_array($reports) || (isset($reports['success']) && $reports['success'] === false)) {
 
-    $reports = []; 
+    $reports = [];
 } else {
 
     $totalReports = count($reports);
@@ -37,9 +37,7 @@ if (!is_array($reports) || (isset($reports['success']) && $reports['success'] ==
 
         if (isset($teams_data['data']) && is_array($teams_data['data'])) {
             $teamCount = count($teams_data['data']);
-        }
-
-        else if (!empty($teams_data)) {
+        } else if (!empty($teams_data)) {
             $teamCount = count($teams_data);
         }
     }
@@ -138,9 +136,21 @@ $mapMarkers = array_map(fn($r) => [
             <div class="chart-container">
                 <div class="chart-card">
 
-                    <div class="chart-card-header">
+                    <div class="chart-card-header d-flex justify-content-between align-items-center">
                         <h4>Monthly Reports</h4>
+
+                        <select id="reportFilter" class="form-select" style="width: 180px;">
+                            <option value="all">All Time</option>
+                            <option value="7">Last 7 Days</option>
+                            <option value="14">Last 14 Days</option>
+                            <option value="30">Last 30 Days</option>
+                            <option value="month">Select Month...</option>
+                        </select>
+
+                        <!-- Hidden month picker -->
+                        <input type="month" id="monthPicker" class="form-control mt-2" style="display:none; width:180px;">
                     </div>
+
 
                     <div class="chart-card-body">
                         <canvas id="monthlyChart"></canvas>
@@ -191,8 +201,8 @@ $mapMarkers = array_map(fn($r) => [
 
     <script>
         // Pass the calculated data to JavaScript for the chart
-        let chartMonths = <?= json_encode($months) ?>;
-        let chartTotals = <?= json_encode($totals) ?>;
+        // let chartMonths = <?= json_encode($months) ?>;
+        // let chartTotals = <?= json_encode($totals) ?>;
 
         // Pass the map marker data to JavaScript
         let mapMarkers = <?= json_encode($mapMarkers) ?>;
