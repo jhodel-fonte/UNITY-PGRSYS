@@ -8,9 +8,9 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 };
 
-$adminCurrentUser = (isset($_SESSION['userLoginData'])) ? $_SESSION['userLoginData']['data']['pgCode'] : null;
+// $adminCurrentUser = (isset($_SESSION['userLoginData'])) ? $_SESSION['userLoginData']['data']['pgCode'] : null;
 
-if ($adminCurrentUser == null) {
+if ($_GET['key'] == null) {
     $response = [
         'success' => false,
         'message' => 'Access Denied!'

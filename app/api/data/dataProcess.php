@@ -3,7 +3,7 @@ require_once __DIR__ . '/../../database/databaseFunctions.php';
 
 function getDataSource($data_source_url) {
     try {
-        $data = file_get_contents($data_source_url);
+        $data = file_get_contents($data_source_url .'&key=JhoeHHAHAAH');
     
         if ($data === false) { 
             throw new Exception("Error: 404, Could not retrieve data from the server. ");

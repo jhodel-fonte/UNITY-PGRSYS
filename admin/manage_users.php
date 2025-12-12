@@ -7,7 +7,7 @@ require_once __DIR__ . '/../app/api/data/dataProcess.php'; // Adjusted slashes
 
 $adminCurrentUser = (isset($_SESSION['userLoginData']) && $_SESSION['userLoginData']['data']['role'] == 'Admin') ? $_SESSION['userLoginData']['data']['pgCode'] : null;
 
-$data_source_url = "http://localhost/UNTY-PGRSYS/app/api/data/getData.php?data=members";//get data
+$data_source_url = "http://localhost/UNTY-PGRSYS/app/api/data/getData.php?data=members";
 $users_data = getDataSource($data_source_url);
 
 // Define valid statuses
@@ -16,7 +16,7 @@ $status_from_url = $_GET['status'] ?? 'All';
 
 $current_status = in_array($status_from_url, $valid_statuses) ? $status_from_url : 'All';
 
-$message = $_SESSION['message'] ?? null;
+$message = isset($_SESSION['message']) ? $_SESSION['message'] : null;
 unset($_SESSION['message']);
 
 $users_filtered_php = [];
