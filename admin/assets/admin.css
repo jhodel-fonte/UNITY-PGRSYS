@@ -49,7 +49,6 @@ body {
 
 /* Icons before text */
 .sidebar a::before {
-    content: "•";
     margin-right: 15px;
     font-size: 22px;
     color: #fff;
