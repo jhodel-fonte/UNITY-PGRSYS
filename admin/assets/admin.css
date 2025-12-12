@@ -369,114 +369,92 @@ body {
         gap: 18px;
     }
 }
-
 /* ============================
-      ADMIN DASHBOARD CARDS
+     ADMIN DASHBOARD LAYOUT
    ============================ */
+
 .dash-content {
-    margin-top: 100px;
-    margin-left: 260px;      
-    padding: 30px 40px;
+    margin-top: 90px;
+    margin-left: 260px;
+    padding: 25px 35px;
     transition: 0.3s ease;
 }
 
+/* Responsive fix for sidebar collapse */
+@media (max-width: 980px) {
+    .dash-content {
+        margin-left: 0 !important;
+        padding: 20px;
+    }
+}
+
+/* ============================
+         SUMMARY CARDS
+   ============================ */
+
+.dashboard-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
 .admin-card {
-    background: linear-gradient(145deg, #ffffff, #f0f0f0);
-    border-radius: 20px;
-    padding: 25px;
+    background: #fff;
+    border-radius: 18px;
+    padding: 28px;
     text-align: center;
-    position: relative;
-    box-shadow: 0 8px 18px rgba(0,0,0,0.1);
-    transition: all .25s ease;
-    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: 0.25s ease;
 }
 
-/* Hover effect */
 .admin-card:hover {
-    transform: translateY(-7px);
-    box-shadow: 0 12px 22px rgba(0,0,0,0.15);
+    transform: translateY(-6px);
 }
 
-/* Background circle */
+/* Stylish BG circles */
 .admin-card::before {
     content: "";
     position: absolute;
     top: -25px;
     right: -25px;
-    width: 90px;
-    height: 90px;
+    width: 85px;
+    height: 85px;
     border-radius: 50%;
-    opacity: 0.25;
-    z-index: 1;
+    background: rgba(255,255,255,0.3);
 }
 
-/* CARD COLORS */
-.col-md-3:nth-child(1) .admin-card {
-    background: linear-gradient(135deg, #ff9aab, #e56b80);
-    color: white;
-}
-.col-md-3:nth-child(1) .admin-card::before {
-    background: #fff;
-}
-
-.col-md-3:nth-child(2) .admin-card {
-    background: linear-gradient(135deg, #ffaf6e, #ff7c36);
-    color: white;
-}
-.col-md-3:nth-child(2) .admin-card::before {
-    background: #fff;
-}
-
-.col-md-3:nth-child(3) .admin-card {
-    background: linear-gradient(135deg, #8b9bff, #6978ff);
-    color: white;
-}
-.col-md-3:nth-child(3) .admin-card::before {
-    background: #fff;
-}
-
-/* Count number */
 .admin-card h1 {
-    font-size: 45px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    z-index: 2;
-    position: relative;
+    font-size: 46px;
+    font-weight: 800;
+    margin-bottom: 5px;
 }
 
-/* Label */
 .admin-card p {
-    font-size: 18px;
-    font-weight: 500;
-    margin: 0;
-    z-index: 2;
-    position: relative;
+    font-size: 17px;
+    opacity: 0.9;
 }
 
-/* ============================
-         LAYOUT WRAPPER
-   ============================ */
-.reports-wrapper {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 25px;
-    margin: 30px 0;
-}
+/* Colors */
+.col-md-3:nth-child(1) .admin-card { background: linear-gradient(135deg,#ff9aab,#e6677a); color:white; }
+.col-md-3:nth-child(2) .admin-card { background: linear-gradient(135deg,#ffb072,#ff8739); color:white; }
+.col-md-3:nth-child(3) .admin-card { background: linear-gradient(135deg,#93a0ff,#6f7cff); color:white; }
 
 /* ============================
-            MAP
+         MAP SECTION
    ============================ */
+
 .map-container {
-    width: 50%;
-    height: 570px;
-    border-radius: 18px;
-    background: #e6e6e6;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    width: 100%;
+    height: 480px;
+    border-radius: 14px;
     overflow: hidden;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.10);
 }
 
 #map {
+    width: 100%;
+    height: 100%;
     cursor: pointer;
 }
 
@@ -487,50 +465,59 @@ body {
 }
 
 /* ============================
-        CHART CARD
+        CHART SECTION
    ============================ */
+
+.chart-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
 .chart-card-header {
     text-align: center;
+    font-weight: 700;
     margin-bottom: 15px;
 }
 
-.chart-card-header h4 {
-    margin: 0;
-    font-weight: 600;
-    color: #333;
+.chart-card-body {
+    height: 280px;   /* <<< prevents infinite downward stretch */
+    position: relative;
 }
 
-.chart-box {
-    width: 100%;
-    padding: 20px;
-    border-radius: 18px;
-    background: #fff;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-}
+/* ============================
+    RECENT APPROVED REPORTS
+   ============================ */
 
-/* Recent reports table */
 .recent-reports {
-    background: #ffffff;
+    background: #fff;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-    margin-top: 30px;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 .recent-reports h3 {
-    font-weight: bold;
-    color: #333;
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 15px;
 }
 
-.table th {
-    background: #222;
-    color: #fff;
+/* Table */
+.table thead th {
+    background: #202225 !important;
+    color: #fff !important;
 }
 
-.table td,
-.table th {
-    padding: 12px;
+.table tbody tr:hover {
+    background: rgba(0,0,0,0.03);
 }
+
+/* Ensure chart + table stack nicely */
+.chart-container {
+    width: 100%;
+}
+
 
 /* ============================
         RESPONSIVE CSS
