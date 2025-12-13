@@ -10,12 +10,13 @@ function getDataSource($data_source_url) {
         }
     
         $response_data = json_decode($data, true); 
+        // var_dump($response_data);
     
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new Exception("Error: Failed to decode JSON. JSON Error: " . json_last_error_msg());
         }
     
-        if ($response_data === null || !isset($response_data['success']) || $response_data['success'] !== true) {
+        if ($response_data == null || !isset($response_data['success']) || $response_data['success'] != true) {
             throw new Exception("Error: Invalid or unsuccessful response from data source. Server Response: " .$response_data['message']);
         }
     

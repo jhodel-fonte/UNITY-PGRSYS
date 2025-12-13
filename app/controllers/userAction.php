@@ -17,7 +17,7 @@
             }
 
             http_response_code(200);
-            echo json_encode(['success' => true, 'message' => 'User Approved!']);
+            echo json_encode(['success' => true, 'message' => 'User Approved!', 'newStatus' => 'Active']);
             exit;
         }
             ///////////////////////////rejected
@@ -30,7 +30,7 @@
             }
 
             http_response_code(200);
-            echo json_encode(['success' => true, 'message' => 'User Rejected!']);
+            echo json_encode(['success' => true, 'message' => 'User Rejected!', 'newStatus' => 'Rejected']);
             exit;
         }
         

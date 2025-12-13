@@ -206,10 +206,13 @@ try {
             }
 
             $response = [
-                // 'success' => true,
+                'success' => true,
                 'data' => $members
             ];
 
+            ob_clean();
+            echo json_encode($response, JSON_PRETTY_PRINT);
+            exit;
         }
 
         //get response tea members
